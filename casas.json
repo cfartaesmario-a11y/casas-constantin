@@ -1,23 +1,690 @@
 {
-  "actualizado": "2026-09-27T12:00:00",
-  "busqueda": "Casas (independientes, pareadas, adosadas, de pueblo) · 3+ hab · hasta 330.000 € · Pineda de Mar (sin Can Carreras/Montessol), Calella, Santa Susanna, Malgrat de Mar",
-  "casas": [
-    {"id":"fc-186532500","pueblo":"Calella","tipo":"Casa independiente grande","zona":"Calella","precio":325000,"precio_inicial":325000,"hab":7,"m2":280,"banos":3,"extras":"Parking, terraza, trastero, patio, calefacción","nota":"","img":"https://static.fotocasa.es/images/ads/11e67720-6010-4bdb-bce0-6659c0883089?rule=web_412x257","links":[{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/calella/calefaccion-parking-terraza-trastero-patio/186532500/d"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"fc-189016536","pueblo":"Calella","tipo":"Casa de pueblo céntrica","zona":"Centro","precio":320000,"precio_inicial":320000,"hab":6,"m2":240,"banos":4,"extras":"Aire acondicionado, calefacción, terraza","nota":"","img":"https://static.fotocasa.es/images/ads/d1d82c11-da4f-483b-955d-6ccca0d1644c?rule=web_412x257","links":[{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/calella/aire-acondicionado-calefaccion-terraza-no-amueblado/189016536/d"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-111559772","pueblo":"Calella","tipo":"Casa de pueblo de 1900","zona":"C/ d'Amadeu 1, centro","precio":260000,"precio_inicial":260000,"hab":4,"m2":170,"banos":2,"extras":"Jardín, terraza","nota":"Para actualizar a tu gusto","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/1c/bf/02/1440470227.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/111559772/"},{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/calella/jardin-terraza-no-amueblado/189774477/d"}],"alias":["fc-189774477"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"fc-187008446","pueblo":"Calella","tipo":"Casa unifamiliar de 1933","zona":"Calella","precio":228999,"precio_inicial":228999,"hab":4,"m2":180,"banos":2,"extras":"Parking, jardín, terraza, trastero","nota":"A reformar íntegramente","img":"https://static.fotocasa.es/images/ads/38c2fc43-9f01-44d8-8660-8b28da081fde?rule=web_412x257","links":[{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/calella/parking-jardin-terraza-trastero-no-amueblado/187008446/d"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-111748952","pueblo":"Calella","tipo":"Casa de pueblo","zona":"C/ d'Amadeu, centro","precio":210000,"precio_inicial":230000,"hab":4,"m2":129,"banos":1,"extras":"Terraza, jardín, patio","nota":"Necesita actualización","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/c7/ac/38/1447121591.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/111748952/"},{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/calella/jardin-terraza-patio-no-amueblado/189967037/d"}],"alias":["fc-189967037"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"fc-187580171","pueblo":"Santa Susanna","tipo":"Casa con jardín cerca del mar","zona":"1ª línea de mar","precio":320000,"precio_inicial":320000,"hab":3,"m2":115,"banos":1,"extras":"Parking, jardín, terraza, amueblada","nota":"","img":"https://static.fotocasa.es/images/ads/c538d685-8234-4825-9234-565062061e2f?rule=web_412x257","links":[{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/santa-susanna/parking-jardin-terraza-amueblado/187580171/d"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-112554902","pueblo":"Malgrat de Mar","tipo":"Casa de pueblo con garaje","zona":"Cerca del CAP","precio":330000,"precio_inicial":330000,"hab":4,"m2":154,"banos":null,"extras":"Garaje incluido","nota":"","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/87/ee/08/1473876901.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/112554902/"}],"alias":["id-112565735","id-112558803","id-112559220","id-112554823","id-112555000","id-112554790","id-112554742","id-112556111","id-112542750"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-112646293","pueblo":"Malgrat de Mar","tipo":"Casa pareada reformada","zona":"C/ Desclapers, centro","precio":325000,"precio_inicial":325000,"hab":3,"m2":126,"banos":null,"extras":"Totalmente reformada","nota":"","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/02/a4/18/1477224804.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/112646293/"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-110515760","pueblo":"Malgrat de Mar","tipo":"Casa pareada reformada","zona":"Centro","precio":315000,"precio_inicial":315000,"hab":3,"m2":120,"banos":null,"extras":"Reformada por completo","nota":"","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/90/59/79/1407363044.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/110515760/"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-110112165","pueblo":"Malgrat de Mar","tipo":"Casa de pueblo reformada","zona":"Centro","precio":315000,"precio_inicial":315000,"hab":3,"m2":90,"banos":2,"extras":"Aire acondicionado, calefacción, buhardilla","nota":"","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/33/49/40/1395588469.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/110112165/"},{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/aire-acondicionado-calefaccion/188343453/d"}],"alias":["fc-188343453"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-110220686","pueblo":"Malgrat de Mar","tipo":"Casa de pueblo reformada (2025)","zona":"Centro","precio":315000,"precio_inicial":315000,"hab":3,"m2":90,"banos":2,"extras":"Lista para entrar a vivir","nota":"","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/47/8f/6b/1402470991.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/110220686/"},{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/no-amueblado/189098168/d"}],"alias":["fc-189098168"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"fc-190937455","pueblo":"Malgrat de Mar","tipo":"Casa a 4 vientos en una planta","zona":"Malgrat de Mar","precio":290000,"precio_inicial":290000,"hab":3,"m2":90,"banos":1,"extras":"Jardín, terraza, patio, calefacción, reformada","nota":"","img":"https://static.fotocasa.es/images/ads/8c23c63f-7543-4be5-b778-516e23a263d1?rule=web_412x257","links":[{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/calefaccion-jardin-terraza-patio-no-amueblado/190937455/d"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-109702313","pueblo":"Malgrat de Mar","tipo":"Chalet adosado grande","zona":"C/ Mossèn Cinto Verdaguer","precio":289000,"precio_inicial":289000,"hab":3,"m2":220,"banos":null,"extras":"220 m²","nota":"","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/bf/c5/3d/1382924847.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/109702313/"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-111835643","pueblo":"Malgrat de Mar","tipo":"Casa de pueblo en zona peatonal","zona":"Centro histórico","precio":249000,"precio_inicial":249000,"hab":4,"m2":214,"banos":1,"extras":"Terraza","nota":"Necesita reforma","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/0f/f5/df/1449975703.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/111835643/"},{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/terraza-no-amueblado/190052223/d"}],"alias":["fc-190052223"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-112655849","pueblo":"Malgrat de Mar","tipo":"Casa con personalidad","zona":"Malgrat de Mar","precio":249000,"precio_inicial":249000,"hab":4,"m2":264,"banos":2,"extras":"Gran potencial","nota":"Totalmente a rehabilitar","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/a0/09/16/1477472924.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/112655849/"},{"portal":"Fotocasa","url":"https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/no-amueblado/190943746/d"}],"alias":["fc-190943746"],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-112343451","pueblo":"Malgrat de Mar","tipo":"Casa de 3 plantas con local","zona":"Centro","precio":249000,"precio_inicial":249000,"hab":5,"m2":219,"banos":null,"extras":"Planta baja local + vivienda","nota":"A reformar","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/8c/c3/36/1466594193.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/112343451/"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true},
-    {"id":"id-110704237","pueblo":"Malgrat de Mar","tipo":"Chalet adosado","zona":"C/ Castell","precio":105000,"precio_inicial":105000,"hab":3,"m2":80,"banos":null,"extras":"Sin comisión al comprador","nota":"Precio muy bajo: revisar estado","img":"https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/5f/41/b9/1412936928.jpg","links":[{"portal":"Idealista","url":"https://www.idealista.com/inmueble/110704237/"}],"alta":"2026-09-27","visto":"2026-09-27","activa":true}
-  ]
+ "actualizado": "2026-09-27T23:52:25",
+ "busqueda": "Casas (independientes, pareadas, adosadas, de pueblo) · 3+ hab · hasta 330.000 € · Pineda de Mar (sin Can Carreras/Montessol), Calella, Santa Susanna, Malgrat de Mar",
+ "casas": [
+  {
+   "id": "fc-186532500",
+   "pueblo": "Calella",
+   "tipo": "Casa independiente grande",
+   "zona": "Calella",
+   "precio": 325000,
+   "precio_inicial": 325000,
+   "hab": 7,
+   "m2": 280,
+   "banos": 3,
+   "extras": "Parking, terraza, trastero, patio, calefacción",
+   "nota": "",
+   "img": "https://static.fotocasa.es/images/ads/11e67720-6010-4bdb-bce0-6659c0883089?rule=web_412x257",
+   "links": [
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/calella/calefaccion-parking-terraza-trastero-patio/186532500/d"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2025-05-19",
+   "carga_inicial": true
+  },
+  {
+   "id": "fc-189016536",
+   "pueblo": "Calella",
+   "tipo": "Casa de pueblo céntrica",
+   "zona": "Centro",
+   "precio": 320000,
+   "precio_inicial": 320000,
+   "hab": 6,
+   "m2": 240,
+   "banos": 4,
+   "extras": "Aire acondicionado, calefacción, terraza",
+   "nota": "",
+   "img": "https://static.fotocasa.es/images/ads/d1d82c11-da4f-483b-955d-6ccca0d1644c?rule=web_412x257",
+   "links": [
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/calella/aire-acondicionado-calefaccion-terraza-no-amueblado/189016536/d"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-03-05",
+   "carga_inicial": true
+  },
+  {
+   "id": "id-111559772",
+   "pueblo": "Calella",
+   "tipo": "Casa de pueblo de 1900",
+   "zona": "C/ d'Amadeu 1, centro",
+   "precio": 260000,
+   "precio_inicial": 260000,
+   "hab": 4,
+   "m2": 170,
+   "banos": 2,
+   "extras": "Jardín, terraza",
+   "nota": "Para actualizar a tu gusto",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/1c/bf/02/1440470227.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/111559772/"
+    },
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/calella/jardin-terraza-no-amueblado/189774477/d"
+    }
+   ],
+   "alias": [
+    "fc-189774477"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-05-25",
+   "carga_inicial": true
+  },
+  {
+   "id": "fc-187008446",
+   "pueblo": "Calella",
+   "tipo": "Casa unifamiliar de 1933",
+   "zona": "Calella",
+   "precio": 228999,
+   "precio_inicial": 228999,
+   "hab": 4,
+   "m2": 180,
+   "banos": 2,
+   "extras": "Parking, jardín, terraza, trastero",
+   "nota": "A reformar íntegramente",
+   "img": "https://static.fotocasa.es/images/ads/38c2fc43-9f01-44d8-8660-8b28da081fde?rule=web_412x257",
+   "links": [
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/calella/parking-jardin-terraza-trastero-no-amueblado/187008446/d"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2025-07-08",
+   "carga_inicial": true
+  },
+  {
+   "id": "id-111748952",
+   "pueblo": "Calella",
+   "tipo": "Casa de pueblo",
+   "zona": "C/ d'Amadeu, centro",
+   "precio": 210000,
+   "precio_inicial": 230000,
+   "hab": 4,
+   "m2": 129,
+   "banos": 1,
+   "extras": "Terraza, jardín, patio",
+   "nota": "Necesita actualización",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/c7/ac/38/1447121591.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/111748952/"
+    },
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/calella/jardin-terraza-patio-no-amueblado/189967037/d"
+    }
+   ],
+   "alias": [
+    "fc-189967037"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-06-13",
+   "carga_inicial": true
+  },
+  {
+   "id": "fc-187580171",
+   "pueblo": "Santa Susanna",
+   "tipo": "Casa con jardín cerca del mar",
+   "zona": "1ª línea de mar",
+   "precio": 320000,
+   "precio_inicial": 320000,
+   "hab": 3,
+   "m2": 115,
+   "banos": 1,
+   "extras": "Parking, jardín, terraza, amueblada",
+   "nota": "",
+   "img": "https://static.fotocasa.es/images/ads/c538d685-8234-4825-9234-565062061e2f?rule=web_412x257",
+   "links": [
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/santa-susanna/parking-jardin-terraza-amueblado/187580171/d"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa-santa_susanna_centro_urbano-57567971319_100500/"
+    },
+    {
+     "portal": "Yaencontre",
+     "url": "https://www.yaencontre.com/venta/casa/inmueble-31660-109298546"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2025-09-16",
+   "alias": [
+    "pc-57567971319",
+    "ya-109298546"
+   ],
+   "carga_inicial": true
+  },
+  {
+   "id": "id-112554902",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa de pueblo con garaje",
+   "zona": "Cerca del CAP",
+   "precio": 330000,
+   "precio_inicial": 330000,
+   "hab": 4,
+   "m2": 154,
+   "banos": null,
+   "extras": "Garaje incluido",
+   "nota": "",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/87/ee/08/1473876901.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/112554902/"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa-malgrat_de_mar_centro_urbano-67544907223_100500/"
+    }
+   ],
+   "alias": [
+    "id-112565735",
+    "id-112558803",
+    "id-112559220",
+    "id-112554823",
+    "id-112555000",
+    "id-112554790",
+    "id-112554742",
+    "id-112556111",
+    "id-112542750",
+    "pc-67544907223",
+    "pc-67557810364",
+    "pc-67558324454",
+    "pc-67548179948",
+    "pc-67574666994"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "carga_inicial": true
+  },
+  {
+   "id": "id-112646293",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa pareada reformada",
+   "zona": "C/ Desclapers, centro",
+   "precio": 325000,
+   "precio_inicial": 325000,
+   "hab": 3,
+   "m2": 126,
+   "banos": null,
+   "extras": "Totalmente reformada",
+   "nota": "",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/02/a4/18/1477224804.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/112646293/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "carga_inicial": true
+  },
+  {
+   "id": "id-110515760",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa pareada reformada",
+   "zona": "Centro",
+   "precio": 315000,
+   "precio_inicial": 315000,
+   "hab": 3,
+   "m2": 120,
+   "banos": null,
+   "extras": "Reformada por completo",
+   "nota": "",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/90/59/79/1407363044.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/110515760/"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa_pareada-malgrat_de_mar_centro_urbano-61711965605_100500/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "alias": [
+    "pc-61711965605"
+   ],
+   "carga_inicial": true
+  },
+  {
+   "id": "id-110112165",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa de pueblo reformada",
+   "zona": "Centro",
+   "precio": 315000,
+   "precio_inicial": 315000,
+   "hab": 3,
+   "m2": 90,
+   "banos": 2,
+   "extras": "Aire acondicionado, calefacción, buhardilla",
+   "nota": "",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/33/49/40/1395588469.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/110112165/"
+    },
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/aire-acondicionado-calefaccion/188343453/d"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/chalet-malgrat_de_mar_centro_urbano-65902094768_100500/"
+    }
+   ],
+   "alias": [
+    "fc-188343453",
+    "pc-65902094768"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2025-12-12",
+   "carga_inicial": true
+  },
+  {
+   "id": "id-110220686",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa de pueblo reformada (2025)",
+   "zona": "Centro",
+   "precio": 315000,
+   "precio_inicial": 315000,
+   "hab": 3,
+   "m2": 90,
+   "banos": 2,
+   "extras": "Lista para entrar a vivir",
+   "nota": "",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/47/8f/6b/1402470991.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/110220686/"
+    },
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/no-amueblado/189098168/d"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa-malgrat_de_mar_centro_urbano-65868435485_106500/"
+    }
+   ],
+   "alias": [
+    "fc-189098168",
+    "pc-65868435485"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-03-13",
+   "carga_inicial": true
+  },
+  {
+   "id": "fc-190937455",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa a 4 vientos en una planta",
+   "zona": "Malgrat de Mar",
+   "precio": 290000,
+   "precio_inicial": 290000,
+   "hab": 3,
+   "m2": 90,
+   "banos": 1,
+   "extras": "Jardín, terraza, patio, calefacción, reformada",
+   "nota": "",
+   "img": "https://static.fotocasa.es/images/ads/8c23c63f-7543-4be5-b778-516e23a263d1?rule=web_412x257",
+   "links": [
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/calefaccion-jardin-terraza-patio-no-amueblado/190937455/d"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/chalet-malgrat_de_mar_centro_urbano-63368675093_528039/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-09-25",
+   "alias": [
+    "pc-63368675093"
+   ],
+   "carga_inicial": true
+  },
+  {
+   "id": "id-109702313",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Chalet adosado grande",
+   "zona": "C/ Mossèn Cinto Verdaguer",
+   "precio": 289000,
+   "precio_inicial": 289000,
+   "hab": 3,
+   "m2": 220,
+   "banos": null,
+   "extras": "220 m²",
+   "nota": "",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/bf/c5/3d/1382924847.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/109702313/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "carga_inicial": true
+  },
+  {
+   "id": "id-111835643",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa de pueblo en zona peatonal",
+   "zona": "Centro histórico",
+   "precio": 249000,
+   "precio_inicial": 249000,
+   "hab": 4,
+   "m2": 214,
+   "banos": 1,
+   "extras": "Terraza",
+   "nota": "Necesita reforma",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/0f/f5/df/1449975703.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/111835643/"
+    },
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/terraza-no-amueblado/190052223/d"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa_adosada-malgrat_de_mar_centro_urbano-65037874329_106100/"
+    }
+   ],
+   "alias": [
+    "fc-190052223",
+    "pc-65037874329"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-06-23",
+   "carga_inicial": true
+  },
+  {
+   "id": "id-112655849",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa con personalidad",
+   "zona": "Malgrat de Mar",
+   "precio": 249000,
+   "precio_inicial": 249000,
+   "hab": 4,
+   "m2": 264,
+   "banos": 2,
+   "extras": "Gran potencial",
+   "nota": "Totalmente a rehabilitar",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/a0/09/16/1477472924.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/112655849/"
+    },
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/no-amueblado/190943746/d"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa-malgrat_de_mar_centro_urbano-67530403009_100600/"
+    }
+   ],
+   "alias": [
+    "fc-190943746",
+    "pc-67530403009"
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "publicada": "2026-09-25",
+   "carga_inicial": true
+  },
+  {
+   "id": "id-112343451",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa de 3 plantas con local",
+   "zona": "Centro",
+   "precio": 249000,
+   "precio_inicial": 249000,
+   "hab": 5,
+   "m2": 219,
+   "banos": null,
+   "extras": "Planta baja local + vivienda",
+   "nota": "A reformar",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/8c/c3/36/1466594193.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/112343451/"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa_adosada-malgrat_de_mar_centro_urbano-66698150909_106100/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "alias": [
+    "pc-66698150909"
+   ],
+   "carga_inicial": true
+  },
+  {
+   "id": "id-110704237",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Chalet adosado",
+   "zona": "C/ Castell",
+   "precio": 105000,
+   "precio_inicial": 105000,
+   "hab": 3,
+   "m2": 80,
+   "banos": null,
+   "extras": "Sin comisión al comprador",
+   "nota": "Precio muy bajo: revisar estado",
+   "img": "https://img4.idealista.com/blur/480_360_mq/0/id.pro.es.image.master/5f/41/b9/1412936928.jpg",
+   "links": [
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/110704237/"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa_adosada-malgrat_de_mar_centro_urbano-61766154287_100700/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true,
+   "alias": [
+    "pc-61766154287"
+   ],
+   "carga_inicial": true
+  },
+  {
+   "id": "pc-48422744468",
+   "pueblo": "Pineda de Mar",
+   "tipo": "Casa en urbanización",
+   "zona": "Can Moré-Santa Anna (urbanización)",
+   "precio": 285000,
+   "precio_inicial": 285000,
+   "hab": 5,
+   "m2": 215,
+   "banos": 2,
+   "extras": "",
+   "nota": "Urbanización Can Moré–Santa Anna (parte alta de Pineda): comprobar si es zona de montaña",
+   "resumen": "Bonita casa en venta en urbanización de Pineda de Mar. Unos 215 m² construidos en parcela llana de 400 m².",
+   "img": "",
+   "links": [
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa-can_more_santa_anna-48422744468_501491/"
+    }
+   ],
+   "alta": "2026-09-27",
+   "visto": "2026-09-27",
+   "activa": true
+  }
+ ],
+ "portales": [
+  "Fotocasa",
+  "Idealista",
+  "Yaencontre",
+  "pisos.com"
+ ],
+ "ignorados": [
+  "fc-178643737",
+  "fc-178686691",
+  "fc-182367551",
+  "fc-184082494",
+  "fc-184133772",
+  "fc-185594593",
+  "fc-185873174",
+  "fc-188266620",
+  "fc-188407927",
+  "fc-188681775",
+  "fc-188740827",
+  "fc-188802021",
+  "fc-188989508",
+  "fc-189089667",
+  "fc-189319498",
+  "fc-189670192",
+  "fc-190014679",
+  "fc-190029491",
+  "fc-190131916",
+  "fc-190478963",
+  "fc-190479552",
+  "fc-190501309",
+  "fc-190511818",
+  "fc-190618010",
+  "fc-190684830",
+  "fc-190885488",
+  "fc-190894655",
+  "id-101126535",
+  "id-101309646",
+  "id-102081838",
+  "id-109686586",
+  "id-110441798",
+  "id-110442210",
+  "id-110447382",
+  "id-110586696",
+  "id-110878522",
+  "id-110962448",
+  "id-111134739",
+  "id-111466987",
+  "id-111656107",
+  "id-111795577",
+  "id-111813811",
+  "id-111879390",
+  "id-112412666",
+  "id-112458667",
+  "id-112477481",
+  "id-112479585",
+  "id-112557865",
+  "id-112614371",
+  "id-112654351",
+  "id-112656807",
+  "pc-35845464780",
+  "pc-46709760708",
+  "pc-50929743489",
+  "pc-56688021347",
+  "pc-61745520711",
+  "pc-62534154831",
+  "pc-63361248740",
+  "pc-64177734480",
+  "pc-64184357430",
+  "pc-65067299356",
+  "pc-65072035681",
+  "pc-65088710336",
+  "pc-65091547558",
+  "pc-65835582088",
+  "pc-65855500286",
+  "pc-65873107698",
+  "pc-65902358518",
+  "pc-65909017493",
+  "pc-65921943842",
+  "pc-66673612727",
+  "pc-66699279094",
+  "pc-66724763256",
+  "pc-67530897959",
+  "pc-67535342932",
+  "pc-67538695618",
+  "pc-67553299963",
+  "pc-67583574009",
+  "pc-67599068527",
+  "ya-101309646",
+  "ya-102081838",
+  "ya-102164846",
+  "ya-106262735",
+  "ya-107583350",
+  "ya-109686586",
+  "ya-109947451",
+  "ya-110441798",
+  "ya-110442210",
+  "ya-110447382",
+  "ya-110473082",
+  "ya-110586696",
+  "ya-110878522",
+  "ya-110962448",
+  "ya-111134739",
+  "ya-111416769",
+  "ya-111466987",
+  "ya-111656107",
+  "ya-111795577",
+  "ya-111813811",
+  "ya-111879390",
+  "ya-112265065",
+  "ya-112284867",
+  "ya-112285407",
+  "ya-112412666",
+  "ya-112458667",
+  "ya-112477481",
+  "ya-112479585",
+  "ya-112606329",
+  "ya-112614371",
+  "ya-112654351",
+  "ya-112656807"
+ ]
 }

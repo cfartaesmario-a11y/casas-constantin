@@ -25,6 +25,7 @@
   .card.retirada { opacity:.5; }
   .foto { position:relative; aspect-ratio:4/3; background:#e5e9ee; }
   .foto img { width:100%; height:100%; object-fit:cover; display:block; }
+  .sinfoto { width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--gris); font-size:.9rem; }
   .tags { position:absolute; top:8px; left:8px; display:flex; gap:5px; flex-wrap:wrap; }
   .tag { font-size:.72rem; font-weight:700; padding:3px 8px; border-radius:6px; color:#fff; }
   .t-nueva { background:var(--rojo); } .t-baja { background:var(--verde); } .t-ret { background:#555; }
@@ -59,10 +60,10 @@
   </div>
   <div class="barra" id="pueblos"></div>
 
-  <h2>🔔 Novedades (últimos 7 días) <span class="n" id="nNov">0</span></h2>
+  <h2>🔔 Novedades de hoy <span id="fechaHoy" style="font-weight:400;font-size:.9rem;color:var(--gris)"></span> <span class="n" id="nNov">0</span></h2>
   <div id="novedades"></div>
 
-  <h2>Todas las casas <span class="n" id="nTodas" style="background:var(--azul)">0</span></h2>
+  <h2>Todas las casas <span style="font-weight:400;font-size:.9rem;color:var(--gris)" id="ordenTxt">(de más nueva a menos nueva)</span> <span class="n" id="nTodas" style="background:var(--azul)">0</span></h2>
   <div id="todas"></div>
 
   <div class="barra" style="margin-top:18px"><button id="verRet">Mostrar casas ya retiradas</button></div>
@@ -71,20 +72,22 @@
 <footer id="pie"></footer>
 
 <script>
-const DIAS_NOVEDAD = 7;
 let datos = null, pueblo = "Todos", orden = "nuevas", verRet = false;
 
+const d0 = new Date();
+const HOY = `${d0.getFullYear()}-${String(d0.getMonth() + 1).padStart(2, "0")}-${String(d0.getDate()).padStart(2, "0")}`;
 const eur = n => n.toLocaleString("es-ES") + " €";
-const fmt = d => new Date(d + "T12:00:00").toLocaleDateString("es-ES", { day:"numeric", month:"short" });
-const hace = d => (Date.now() - new Date(d + "T00:00:00")) / 86400000;
-const esNueva = c => hace(c.alta) <= DIAS_NOVEDAD;
+const fmt = d => new Date(d + "T12:00:00").toLocaleDateString("es-ES", { day:"numeric", month:"short", year:"numeric" });
+const publicada = c => c.publicada || c.alta;
+const ultimaFecha = c => [c.publicada || "", c.carga_inicial ? "" : c.alta, c.modificada || ""].sort().pop();
+const esNueva = c => c.alta === HOY && !c.carga_inicial;
 const bajada = c => c.precio_inicial && c.precio < c.precio_inicial;
-const bajadaReciente = c => bajada(c) && c.cambio_precio && hace(c.cambio_precio) <= DIAS_NOVEDAD;
+const esNovedadHoy = c => c.activa && (esNueva(c) || c.modificada === HOY || c.publicada === HOY);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 
 function ordenar(l) {
   const f = {
-    "nuevas": (a,b) => (b.alta.localeCompare(a.alta)) || ((b.cambio_precio||"").localeCompare(a.cambio_precio||"")) || a.precio - b.precio,
+    "nuevas": (a,b) => ultimaFecha(b).localeCompare(ultimaFecha(a)) || a.precio - b.precio,
     "precio-asc": (a,b) => a.precio - b.precio,
     "precio-desc": (a,b) => b.precio - a.precio,
     "m2": (a,b) => (b.m2||0) - (a.m2||0),
@@ -96,20 +99,22 @@ function ordenar(l) {
 function tarjeta(c) {
   const tags = [];
   if (!c.activa) tags.push('<span class="tag t-ret">RETIRADA</span>');
-  else if (esNueva(c)) tags.push('<span class="tag t-nueva">NUEVA · ' + fmt(c.alta) + '</span>');
+  else if (esNueva(c) || c.publicada === HOY) tags.push('<span class="tag t-nueva">NUEVA HOY</span>');
+  else if (c.modificada === HOY) tags.push('<span class="tag t-nueva">MODIFICADA HOY</span>');
   if (c.activa && bajada(c)) tags.push('<span class="tag t-baja">↓ BAJA ' + eur(c.precio_inicial - c.precio) + '</span>');
   const datos = [c.hab && c.hab + " hab.", c.m2 && c.m2 + " m²", c.banos && c.banos + (c.banos > 1 ? " baños" : " baño")].filter(Boolean).join(" · ");
-  return `<div class="card ${c.activa && (esNueva(c) || bajadaReciente(c)) ? "nueva" : ""} ${c.activa ? "" : "retirada"}">
-    <div class="foto"><img src="${esc(c.img)}" alt="" loading="lazy" referrerpolicy="no-referrer"><div class="tags">${tags.join("")}</div></div>
+  return `<div class="card ${esNovedadHoy(c) ? "nueva" : ""} ${c.activa ? "" : "retirada"}">
+    <div class="foto">${c.img ? `<img src="${esc(c.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'sinfoto',textContent:'📷 Fotos en el anuncio'}))">` : `<div class="sinfoto">📷 Fotos en el anuncio</div>`}<div class="tags">${tags.join("")}</div></div>
     <div class="info">
       <div class="precio">${eur(c.precio)}${bajada(c) ? `<span class="antes">${eur(c.precio_inicial)}</span>` : ""}</div>
       <div class="tipo">${esc(c.tipo)}</div>
       <div class="lugar">📍 ${esc(c.zona)} · ${esc(c.pueblo)}</div>
       <div class="datos">${datos}</div>
       ${c.extras ? `<div class="extras">${esc(c.extras)}</div>` : ""}
+      ${c.resumen ? `<div class="extras">${esc(c.resumen)}…</div>` : ""}
       ${c.nota ? `<div class="nota">⚠ ${esc(c.nota)}</div>` : ""}
       <div class="links">${c.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">Ver en ${esc(l.portal)} ↗</a>`).join("")}</div>
-      <div class="fecha">Encontrada el ${fmt(c.alta)}${c.activa ? "" : " · retirada el " + fmt(c.visto)}</div>
+      <div class="fecha">📅 ${c.publicada ? "Publicada" : "Encontrada"}: <b>${fmt(publicada(c))}</b>${c.modificada ? ` · ✏️ Modificada: <b>${fmt(c.modificada)}</b>` : ""}${c.activa ? "" : " · Retirada: " + fmt(c.retirada || c.visto)}</div>
     </div></div>`;
 }
 
@@ -120,10 +125,12 @@ function lista(el, l, vacio) {
 function pintar() {
   const filtro = c => pueblo === "Todos" || c.pueblo === pueblo;
   const activas = datos.casas.filter(c => c.activa && filtro(c));
-  const nov = activas.filter(c => esNueva(c) || bajadaReciente(c));
+  const nov = activas.filter(esNovedadHoy);
   document.getElementById("nNov").textContent = nov.length;
   document.getElementById("nTodas").textContent = activas.length;
-  lista("novedades", nov, "No hay novedades en los últimos 7 días. Se revisa cada día automáticamente.");
+  document.getElementById("fechaHoy").textContent = "(" + fmt(HOY) + ")";
+  document.getElementById("ordenTxt").textContent = orden === "nuevas" ? "(de más nueva a menos nueva)" : "";
+  lista("novedades", nov, "No hay novedades de casas publicadas hoy.");
   lista("todas", activas, "No hay casas con estos filtros.");
   const ret = datos.casas.filter(c => !c.activa && filtro(c));
   document.getElementById("verRet").textContent = (verRet ? "Ocultar" : "Mostrar") + ` casas ya retiradas (${ret.length})`;
@@ -135,7 +142,7 @@ fetch("casas.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).t
   datos = j;
   const act = new Date(j.actualizado);
   document.getElementById("sub").textContent = "Última revisión: " + act.toLocaleString("es-ES", { weekday:"long", day:"numeric", month:"long", hour:"2-digit", minute:"2-digit" });
-  document.getElementById("pie").textContent = j.busqueda + " · Fuentes: Idealista y Fotocasa";
+  document.getElementById("pie").textContent = j.busqueda + " · Portales revisados: " + (j.portales || ["Idealista", "Fotocasa"]).join(", ");
   const ps = ["Todos", "Pineda de Mar", "Calella", "Santa Susanna", "Malgrat de Mar"];
   document.getElementById("pueblos").innerHTML = '<label>Pueblo:</label>' + ps.map(p => {
     const n = p === "Todos" ? j.casas.filter(c => c.activa).length : j.casas.filter(c => c.activa && c.pueblo === p).length;
