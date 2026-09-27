@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casas Constantin</title>
+<style>
+  :root { --azul:#1f4e79; --rojo:#c0392b; --verde:#1e8449; --gris:#666; --fondo:#f4f6f8; --borde:#dde3ea; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--fondo); color:#222; }
+  header { background:var(--azul); color:#fff; padding:18px 16px 14px; }
+  header h1 { margin:0; font-size:1.5rem; }
+  header p { margin:4px 0 0; font-size:.85rem; opacity:.85; }
+  main { max-width:1100px; margin:0 auto; padding:16px; }
+  .barra { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px; }
+  .barra label { font-size:.85rem; color:var(--gris); margin-right:2px; }
+  button, select { font:inherit; font-size:.9rem; padding:7px 12px; border-radius:20px; border:1px solid var(--borde); background:#fff; cursor:pointer; }
+  button.on { background:var(--azul); color:#fff; border-color:var(--azul); }
+  h2 { font-size:1.15rem; margin:22px 0 10px; display:flex; align-items:center; gap:8px; }
+  h2 .n { background:var(--rojo); color:#fff; font-size:.8rem; border-radius:12px; padding:2px 9px; }
+  .vacio { color:var(--gris); font-size:.9rem; background:#fff; border:1px dashed var(--borde); border-radius:10px; padding:14px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+  .card { background:#fff; border:1px solid var(--borde); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; }
+  .card.nueva { border:2px solid var(--rojo); }
+  .card.retirada { opacity:.5; }
+  .foto { position:relative; aspect-ratio:4/3; background:#e5e9ee; }
+  .foto img { width:100%; height:100%; object-fit:cover; display:block; }
+  .tags { position:absolute; top:8px; left:8px; display:flex; gap:5px; flex-wrap:wrap; }
+  .tag { font-size:.72rem; font-weight:700; padding:3px 8px; border-radius:6px; color:#fff; }
+  .t-nueva { background:var(--rojo); } .t-baja { background:var(--verde); } .t-ret { background:#555; }
+  .info { padding:12px 14px 14px; display:flex; flex-direction:column; gap:4px; flex:1; }
+  .precio { font-size:1.35rem; font-weight:800; color:var(--rojo); }
+  .antes { font-size:.85rem; color:var(--gris); text-decoration:line-through; margin-left:6px; font-weight:400; }
+  .tipo { font-weight:700; color:var(--azul); }
+  .lugar, .extras { font-size:.85rem; color:var(--gris); }
+  .datos { font-size:.92rem; }
+  .nota { font-size:.82rem; color:#b9770e; font-style:italic; }
+  .fecha { font-size:.75rem; color:var(--gris); margin-top:auto; padding-top:6px; }
+  .links { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  .links a { font-size:.85rem; text-decoration:none; background:#eaf1f8; color:var(--azul); padding:6px 10px; border-radius:8px; font-weight:600; }
+  footer { text-align:center; font-size:.78rem; color:var(--gris); padding:24px 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🏡 Casas Constantin</h1>
+  <p id="sub">Cargando…</p>
+</header>
+<main>
+  <div class="barra">
+    <label>Ordenar:</label>
+    <select id="orden">
+      <option value="nuevas">Más nuevas primero</option>
+      <option value="precio-asc">Precio: más barato</option>
+      <option value="precio-desc">Precio: más caro</option>
+      <option value="m2">Más metros</option>
+      <option value="hab">Más habitaciones</option>
+    </select>
+  </div>
+  <div class="barra" id="pueblos"></div>
+
+  <h2>🔔 Novedades (últimos 7 días) <span class="n" id="nNov">0</span></h2>
+  <div id="novedades"></div>
+
+  <h2>Todas las casas <span class="n" id="nTodas" style="background:var(--azul)">0</span></h2>
+  <div id="todas"></div>
+
+  <div class="barra" style="margin-top:18px"><button id="verRet">Mostrar casas ya retiradas</button></div>
+  <div id="retiradas"></div>
+</main>
+<footer id="pie"></footer>
+
+<script>
+const DIAS_NOVEDAD = 7;
+let datos = null, pueblo = "Todos", orden = "nuevas", verRet = false;
+
+const eur = n => n.toLocaleString("es-ES") + " €";
+const fmt = d => new Date(d + "T12:00:00").toLocaleDateString("es-ES", { day:"numeric", month:"short" });
+const hace = d => (Date.now() - new Date(d + "T00:00:00")) / 86400000;
+const esNueva = c => hace(c.alta) <= DIAS_NOVEDAD;
+const bajada = c => c.precio_inicial && c.precio < c.precio_inicial;
+const bajadaReciente = c => bajada(c) && c.cambio_precio && hace(c.cambio_precio) <= DIAS_NOVEDAD;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+
+function ordenar(l) {
+  const f = {
+    "nuevas": (a,b) => (b.alta.localeCompare(a.alta)) || ((b.cambio_precio||"").localeCompare(a.cambio_precio||"")) || a.precio - b.precio,
+    "precio-asc": (a,b) => a.precio - b.precio,
+    "precio-desc": (a,b) => b.precio - a.precio,
+    "m2": (a,b) => (b.m2||0) - (a.m2||0),
+    "hab": (a,b) => (b.hab||0) - (a.hab||0) || a.precio - b.precio,
+  }[orden];
+  return [...l].sort(f);
+}
+
+function tarjeta(c) {
+  const tags = [];
+  if (!c.activa) tags.push('<span class="tag t-ret">RETIRADA</span>');
+  else if (esNueva(c)) tags.push('<span class="tag t-nueva">NUEVA · ' + fmt(c.alta) + '</span>');
+  if (c.activa && bajada(c)) tags.push('<span class="tag t-baja">↓ BAJA ' + eur(c.precio_inicial - c.precio) + '</span>');
+  const datos = [c.hab && c.hab + " hab.", c.m2 && c.m2 + " m²", c.banos && c.banos + (c.banos > 1 ? " baños" : " baño")].filter(Boolean).join(" · ");
+  return `<div class="card ${c.activa && (esNueva(c) || bajadaReciente(c)) ? "nueva" : ""} ${c.activa ? "" : "retirada"}">
+    <div class="foto"><img src="${esc(c.img)}" alt="" loading="lazy" referrerpolicy="no-referrer"><div class="tags">${tags.join("")}</div></div>
+    <div class="info">
+      <div class="precio">${eur(c.precio)}${bajada(c) ? `<span class="antes">${eur(c.precio_inicial)}</span>` : ""}</div>
+      <div class="tipo">${esc(c.tipo)}</div>
+      <div class="lugar">📍 ${esc(c.zona)} · ${esc(c.pueblo)}</div>
+      <div class="datos">${datos}</div>
+      ${c.extras ? `<div class="extras">${esc(c.extras)}</div>` : ""}
+      ${c.nota ? `<div class="nota">⚠ ${esc(c.nota)}</div>` : ""}
+      <div class="links">${c.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">Ver en ${esc(l.portal)} ↗</a>`).join("")}</div>
+      <div class="fecha">Encontrada el ${fmt(c.alta)}${c.activa ? "" : " · retirada el " + fmt(c.visto)}</div>
+    </div></div>`;
+}
+
+function lista(el, l, vacio) {
+  document.getElementById(el).innerHTML = l.length ? `<div class="grid">${ordenar(l).map(tarjeta).join("")}</div>` : `<div class="vacio">${vacio}</div>`;
+}
+
+function pintar() {
+  const filtro = c => pueblo === "Todos" || c.pueblo === pueblo;
+  const activas = datos.casas.filter(c => c.activa && filtro(c));
+  const nov = activas.filter(c => esNueva(c) || bajadaReciente(c));
+  document.getElementById("nNov").textContent = nov.length;
+  document.getElementById("nTodas").textContent = activas.length;
+  lista("novedades", nov, "No hay novedades en los últimos 7 días. Se revisa cada día automáticamente.");
+  lista("todas", activas, "No hay casas con estos filtros.");
+  const ret = datos.casas.filter(c => !c.activa && filtro(c));
+  document.getElementById("verRet").textContent = (verRet ? "Ocultar" : "Mostrar") + ` casas ya retiradas (${ret.length})`;
+  document.getElementById("retiradas").innerHTML = verRet ? (ret.length ? `<div class="grid">${ordenar(ret).map(tarjeta).join("")}</div>` : "") : "";
+  document.querySelectorAll("#pueblos button").forEach(b => b.classList.toggle("on", b.dataset.p === pueblo));
+}
+
+fetch("casas.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(j => {
+  datos = j;
+  const act = new Date(j.actualizado);
+  document.getElementById("sub").textContent = "Última revisión: " + act.toLocaleString("es-ES", { weekday:"long", day:"numeric", month:"long", hour:"2-digit", minute:"2-digit" });
+  document.getElementById("pie").textContent = j.busqueda + " · Fuentes: Idealista y Fotocasa";
+  const ps = ["Todos", "Pineda de Mar", "Calella", "Santa Susanna", "Malgrat de Mar"];
+  document.getElementById("pueblos").innerHTML = '<label>Pueblo:</label>' + ps.map(p => {
+    const n = p === "Todos" ? j.casas.filter(c => c.activa).length : j.casas.filter(c => c.activa && c.pueblo === p).length;
+    return `<button data-p="${p}">${p} (${n})</button>`;
+  }).join("");
+  document.querySelectorAll("#pueblos button").forEach(b => b.onclick = () => { pueblo = b.dataset.p; pintar(); });
+  document.getElementById("orden").onchange = e => { orden = e.target.value; pintar(); };
+  document.getElementById("verRet").onclick = () => { verRet = !verRet; pintar(); };
+  pintar();
+}).catch(() => document.getElementById("sub").textContent = "No se pudieron cargar los datos.");
+</script>
+</body>
+</html>
