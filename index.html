@@ -39,6 +39,9 @@
   .fecha { font-size:.75rem; color:var(--gris); margin-top:auto; padding-top:6px; }
   .links { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
   .links a { font-size:.85rem; text-decoration:none; background:#eaf1f8; color:var(--azul); padding:6px 10px; border-radius:8px; font-weight:600; }
+  .btn-ocultar { margin-top:8px; align-self:flex-start; font-size:.8rem; padding:5px 10px; color:var(--gris); background:#f4f6f8; }
+  .btn-ocultar:hover { color:var(--rojo); border-color:var(--rojo); }
+  .card.oculta { opacity:.6; }
   footer { text-align:center; font-size:.78rem; color:var(--gris); padding:24px 16px; }
 </style>
 </head>
@@ -66,13 +69,27 @@
   <h2>Todas las casas <span style="font-weight:400;font-size:.9rem;color:var(--gris)" id="ordenTxt">(de más nueva a menos nueva)</span> <span class="n" id="nTodas" style="background:var(--azul)">0</span></h2>
   <div id="todas"></div>
 
+  <div class="barra" style="margin-top:18px"><button id="verOcu">Mostrar casas ocultadas</button></div>
+  <div id="ocultas"></div>
+
   <div class="barra" style="margin-top:18px"><button id="verRet">Mostrar casas ya retiradas</button></div>
   <div id="retiradas"></div>
 </main>
 <footer id="pie"></footer>
 
 <script>
-let datos = null, pueblo = "Todos", orden = "nuevas", verRet = false;
+let datos = null, pueblo = "Todos", orden = "nuevas", verRet = false, verOcu = false;
+
+// Casas ocultadas con "No me interesa": se guardan en este navegador
+// (+ las que estén en "ocultas" de casas.json, que valen para todos los dispositivos)
+let ocultasLocal = new Set();
+try { ocultasLocal = new Set(JSON.parse(localStorage.getItem("casas-ocultas") || "[]")); } catch (e) {}
+const guardarOcultas = () => { try { localStorage.setItem("casas-ocultas", JSON.stringify([...ocultasLocal])); } catch (e) {} };
+const oculta = c => ocultasLocal.has(c.id) || (datos.ocultas || []).includes(c.id);
+function alternarOculta(id) {
+  if (ocultasLocal.has(id)) ocultasLocal.delete(id); else ocultasLocal.add(id);
+  guardarOcultas(); pintar();
+}
 
 const d0 = new Date();
 const HOY = `${d0.getFullYear()}-${String(d0.getMonth() + 1).padStart(2, "0")}-${String(d0.getDate()).padStart(2, "0")}`;
@@ -103,7 +120,7 @@ function tarjeta(c) {
   else if (c.modificada === HOY) tags.push('<span class="tag t-nueva">MODIFICADA HOY</span>');
   if (c.activa && bajada(c)) tags.push('<span class="tag t-baja">↓ BAJA ' + eur(c.precio_inicial - c.precio) + '</span>');
   const datos = [c.hab && c.hab + " hab.", c.m2 && c.m2 + " m²", c.banos && c.banos + (c.banos > 1 ? " baños" : " baño")].filter(Boolean).join(" · ");
-  return `<div class="card ${esNovedadHoy(c) ? "nueva" : ""} ${c.activa ? "" : "retirada"}">
+  return `<div class="card ${esNovedadHoy(c) && !oculta(c) ? "nueva" : ""} ${c.activa ? "" : "retirada"} ${oculta(c) ? "oculta" : ""}">
     <div class="foto">${c.img ? `<img src="${esc(c.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'sinfoto',textContent:'📷 Fotos en el anuncio'}))">` : `<div class="sinfoto">📷 Fotos en el anuncio</div>`}<div class="tags">${tags.join("")}</div></div>
     <div class="info">
       <div class="precio">${eur(c.precio)}${bajada(c) ? `<span class="antes">${eur(c.precio_inicial)}</span>` : ""}</div>
@@ -114,6 +131,7 @@ function tarjeta(c) {
       ${c.resumen ? `<div class="extras">${esc(c.resumen)}…</div>` : ""}
       ${c.nota ? `<div class="nota">⚠ ${esc(c.nota)}</div>` : ""}
       <div class="links">${c.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">Ver en ${esc(l.portal)} ↗</a>`).join("")}</div>
+      <button class="btn-ocultar" data-id="${esc(c.id)}">${oculta(c) ? "↩ Volver a mostrar" : "🚫 No me interesa (ocultar)"}</button>
       <div class="fecha">📅 ${c.publicada ? "Publicada" : "Encontrada"}: <b>${fmt(publicada(c))}</b>${c.modificada ? ` · ✏️ Modificada: <b>${fmt(c.modificada)}</b>` : ""}${c.activa ? "" : " · Retirada: " + fmt(c.retirada || c.visto)}</div>
     </div></div>`;
 }
@@ -124,7 +142,10 @@ function lista(el, l, vacio) {
 
 function pintar() {
   const filtro = c => pueblo === "Todos" || c.pueblo === pueblo;
-  const activas = datos.casas.filter(c => c.activa && filtro(c));
+  const activas = datos.casas.filter(c => c.activa && filtro(c) && !oculta(c));
+  const ocu = datos.casas.filter(c => c.activa && filtro(c) && oculta(c));
+  document.getElementById("verOcu").textContent = (verOcu ? "Esconder" : "Mostrar") + ` casas ocultadas (${ocu.length})`;
+  document.getElementById("ocultas").innerHTML = verOcu && ocu.length ? `<div class="grid">${ordenar(ocu).map(tarjeta).join("")}</div>` : "";
   const nov = activas.filter(esNovedadHoy);
   document.getElementById("nNov").textContent = nov.length;
   document.getElementById("nTodas").textContent = activas.length;
@@ -153,6 +174,11 @@ fetch("casas.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).t
   document.querySelectorAll("#pueblos button").forEach(b => b.onclick = () => { pueblo = b.dataset.p; pintar(); });
   document.getElementById("orden").onchange = e => { orden = e.target.value; pintar(); };
   document.getElementById("verRet").onclick = () => { verRet = !verRet; pintar(); };
+  document.getElementById("verOcu").onclick = () => { verOcu = !verOcu; pintar(); };
+  document.querySelector("main").addEventListener("click", e => {
+    const b = e.target.closest(".btn-ocultar");
+    if (b) alternarOculta(b.dataset.id);
+  });
   pintar();
 }).catch(() => document.getElementById("sub").textContent = "No se pudieron cargar los datos.");
 </script>
