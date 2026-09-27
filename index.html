@@ -141,7 +141,9 @@ function pintar() {
 fetch("casas.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(j => {
   datos = j;
   const act = new Date(j.actualizado);
-  document.getElementById("sub").textContent = "Última revisión: " + act.toLocaleString("es-ES", { weekday:"long", day:"numeric", month:"long", hour:"2-digit", minute:"2-digit" });
+  const dia = act.toLocaleDateString("es-ES", { weekday:"long", day:"2-digit", month:"2-digit", year:"numeric" });
+  const hora = act.toLocaleTimeString("es-ES", { hour:"2-digit", minute:"2-digit", second:"2-digit" });
+  document.getElementById("sub").innerHTML = `🕒 Última actualización: <b>${dia} a las ${hora}</b>`;
   document.getElementById("pie").textContent = j.busqueda + " · Portales revisados: " + (j.portales || ["Idealista", "Fotocasa"]).join(", ");
   const ps = ["Todos", "Pineda de Mar", "Calella", "Santa Susanna", "Malgrat de Mar"];
   document.getElementById("pueblos").innerHTML = '<label>Pueblo:</label>' + ps.map(p => {
