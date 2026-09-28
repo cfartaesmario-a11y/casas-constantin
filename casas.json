@@ -1,7 +1,31 @@
 {
- "actualizado": "2026-09-28T00:33:53",
+ "actualizado": "2026-09-28T16:39:04",
  "busqueda": "Casas (independientes, pareadas, adosadas, de pueblo) · 3+ hab · hasta 330.000 € · Pineda de Mar (sin Can Carreras/Montessol), Calella, Santa Susanna, Malgrat de Mar",
  "casas": [
+  {
+   "id": "hc-41980000000301",
+   "pueblo": "Pineda de Mar",
+   "tipo": "Casa adosada",
+   "zona": "Poblenou",
+   "precio": 232999,
+   "precio_inicial": 232999,
+   "hab": 4,
+   "m2": 214,
+   "banos": null,
+   "extras": "Terraza, a 1 min de la playa",
+   "nota": "El anuncio habla de rentabilidad bruta del 9%: comprobar si está alquilada con inquilinos",
+   "resumen": "Casa adosada de dos plantas en Poblenou, a 1 minuto de la playa.",
+   "img": "https://images.habimg.com/imgh/41980-301/casa-de-dos-plantas-a-1-minuto-de-la-playa--rentabilidad-bruta-anual-del-9-pineda-de-mar_02c52732-21bf-4b1d-bfaf-407944d2387eXL.jpg",
+   "links": [
+    {
+     "portal": "Habitaclia",
+     "url": "https://www.habitaclia.com/i41980000000301.htm"
+    }
+   ],
+   "alta": "2026-09-28",
+   "visto": "2026-09-28",
+   "activa": true
+  },
   {
    "id": "fc-186532500",
    "pueblo": "Calella",
@@ -572,7 +596,8 @@
   "Fotocasa",
   "Idealista",
   "Yaencontre",
-  "pisos.com"
+  "pisos.com",
+  "Habitaclia"
  ],
  "ignorados": [
   "fc-178643737",
