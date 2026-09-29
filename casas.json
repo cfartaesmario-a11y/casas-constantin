@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-09-28T16:39:04",
+ "actualizado": "2026-09-29T19:01:49",
  "busqueda": "Casas (independientes, pareadas, adosadas, de pueblo) · 3+ hab · hasta 330.000 € · Pineda de Mar (sin Can Carreras/Montessol), Calella, Santa Susanna, Malgrat de Mar",
  "casas": [
   {
@@ -47,9 +47,10 @@
    ],
    "alta": "2026-09-27",
    "visto": "2026-09-28",
-   "activa": true,
+   "activa": false,
    "publicada": "2025-05-19",
-   "carga_inicial": true
+   "carga_inicial": true,
+   "retirada": "2026-09-29"
   },
   {
    "id": "fc-189016536",
@@ -71,7 +72,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-03-05",
    "carga_inicial": true
@@ -103,7 +104,7 @@
     "fc-189774477"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-05-25",
    "carga_inicial": true
@@ -128,7 +129,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2025-07-08",
    "carga_inicial": true
@@ -160,7 +161,7 @@
     "fc-189967037"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-06-13",
    "carga_inicial": true
@@ -193,7 +194,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2025-09-16",
    "alias": [
@@ -242,7 +243,7 @@
     "pc-67574666994"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "carga_inicial": true
   },
@@ -266,7 +267,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "carga_inicial": true
   },
@@ -294,7 +295,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "alias": [
     "pc-61711965605"
@@ -333,7 +334,7 @@
     "pc-65902094768"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2025-12-12",
    "carga_inicial": true
@@ -370,7 +371,7 @@
     "pc-65868435485"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-03-13",
    "carga_inicial": true
@@ -399,7 +400,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-09-25",
    "alias": [
@@ -427,7 +428,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "carga_inicial": true
   },
@@ -463,7 +464,7 @@
     "pc-65037874329"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-06-23",
    "carga_inicial": true
@@ -500,7 +501,7 @@
     "pc-67530403009"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "publicada": "2026-09-25",
    "carga_inicial": true
@@ -529,7 +530,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "alias": [
     "pc-66698150909"
@@ -560,7 +561,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true,
    "alias": [
     "pc-61766154287"
@@ -588,7 +589,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-28",
+   "visto": "2026-09-29",
    "activa": true
   }
  ],
@@ -596,8 +597,7 @@
   "Fotocasa",
   "Idealista",
   "Yaencontre",
-  "pisos.com",
-  "Habitaclia"
+  "pisos.com"
  ],
  "ignorados": [
   "fc-178643737",
