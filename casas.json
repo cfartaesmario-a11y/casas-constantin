@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-09-29T19:01:49",
+ "actualizado": "2026-10-02T07:27:05",
  "busqueda": "Casas (independientes, pareadas, adosadas, de pueblo) · 3+ hab · hasta 330.000 € · Pineda de Mar (sin Can Carreras/Montessol), Calella, Santa Susanna, Malgrat de Mar",
  "casas": [
   {
@@ -72,7 +72,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-03-05",
    "carga_inicial": true
@@ -104,7 +104,7 @@
     "fc-189774477"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-05-25",
    "carga_inicial": true
@@ -129,7 +129,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2025-07-08",
    "carga_inicial": true
@@ -161,7 +161,7 @@
     "fc-189967037"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-06-13",
    "carga_inicial": true
@@ -194,7 +194,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2025-09-16",
    "alias": [
@@ -243,7 +243,7 @@
     "pc-67574666994"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "carga_inicial": true
   },
@@ -267,7 +267,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "carga_inicial": true
   },
@@ -295,7 +295,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "alias": [
     "pc-61711965605"
@@ -307,7 +307,7 @@
    "pueblo": "Malgrat de Mar",
    "tipo": "Casa de pueblo reformada",
    "zona": "Centro",
-   "precio": 315000,
+   "precio": 325000,
    "precio_inicial": 315000,
    "hab": 3,
    "m2": 90,
@@ -334,10 +334,11 @@
     "pc-65902094768"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2025-12-12",
-   "carga_inicial": true
+   "carga_inicial": true,
+   "modificada": "2026-10-02"
   },
   {
    "id": "id-110220686",
@@ -371,7 +372,7 @@
     "pc-65868435485"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-03-13",
    "carga_inicial": true
@@ -400,7 +401,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-09-25",
    "alias": [
@@ -428,7 +429,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "carga_inicial": true
   },
@@ -464,7 +465,7 @@
     "pc-65037874329"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-06-23",
    "carga_inicial": true
@@ -501,7 +502,7 @@
     "pc-67530403009"
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "publicada": "2026-09-25",
    "carga_inicial": true
@@ -530,7 +531,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "alias": [
     "pc-66698150909"
@@ -561,7 +562,7 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true,
    "alias": [
     "pc-61766154287"
@@ -589,8 +590,50 @@
     }
    ],
    "alta": "2026-09-27",
-   "visto": "2026-09-29",
+   "visto": "2026-10-02",
    "activa": true
+  },
+  {
+   "id": "fc-190986316",
+   "pueblo": "Malgrat de Mar",
+   "tipo": "Casa adosada a estrenar",
+   "zona": "Centro histórico (C/ Desclapers)",
+   "precio": 325000,
+   "precio_inicial": 325000,
+   "hab": 3,
+   "m2": 120,
+   "banos": 2,
+   "extras": "",
+   "nota": "",
+   "resumen": "Oportunidad única. Casa totalmente nueva, a estrenar, en la mejor zona de Malgrat de Mar - Centro Histórico. Casa adosada de distribuida en 3 plantas pensada para vivir con comodidad: Planta baja: Amplio salón-comedor-co",
+   "img": "https://static.fotocasa.es/images/ads/1c51f52d-3fe5-418a-a450-0fec5370ac27?rule=web_412x257",
+   "links": [
+    {
+     "portal": "Fotocasa",
+     "url": "https://www.fotocasa.es/es/comprar/vivienda/malgrat-de-mar/aire-acondicionado/190986316/d"
+    },
+    {
+     "portal": "Idealista",
+     "url": "https://www.idealista.com/inmueble/112700720/"
+    },
+    {
+     "portal": "pisos.com",
+     "url": "https://www.pisos.com/comprar/casa-malgrat_de_mar_centro_urbano-67583288149_518056/"
+    },
+    {
+     "portal": "Yaencontre",
+     "url": "https://www.yaencontre.com/venta/casa/inmueble-10555-112700720"
+    }
+   ],
+   "alta": "2026-10-02",
+   "visto": "2026-10-02",
+   "activa": true,
+   "publicada": "2026-09-30",
+   "alias": [
+    "id-112700720",
+    "pc-67583288149",
+    "ya-112700720"
+   ]
   }
  ],
  "portales": [
@@ -676,7 +719,10 @@
   "pc-67530897959",
   "pc-67535342932",
   "pc-67538695618",
+  "pc-67539954597",
   "pc-67553299963",
+  "pc-67559535492",
+  "pc-67577083630",
   "pc-67583574009",
   "pc-67599068527",
   "ya-101309646",
