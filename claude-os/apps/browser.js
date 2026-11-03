@@ -28,11 +28,11 @@
     return svg.replace(/id="([\w-]+)"/g, `id="$1-n${n}"`).replace(/url\(#([\w-]+)\)/g, `url(#$1-n${n})`);
   };
 
-  /* Favicon real de una web (servicio de Google). En incógnito no se pide nada a terceros. */
+  /* Favicon real de una web (servicio de DuckDuckGo). En incógnito no se pide nada a terceros. */
   function faviconUrl(url) {
     try {
       const h = new URL(url).hostname;
-      return h ? "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(h) : "";
+      return h ? "https://icons.duckduckgo.com/ip3/" + encodeURIComponent(h) + ".ico" : "";
     } catch { return ""; }
   }
 
@@ -48,7 +48,7 @@
     { name: "METAR LEBL", url: "https://aviationweather.gov/api/data/metar?ids=LEBL&format=raw&hours=3", bg: "#f9a825" },
     { name: "Mapa",       url: "https://www.openstreetmap.org/#map=11/41.39/2.17", bg: "#58a55c" },
     { name: "Hacker News", url: "https://news.ycombinator.com", bg: "#ff6600" },
-    { name: "Google",     url: "https://www.google.com",   bg: "#4285f4" }
+    { name: "Archive.org", url: "https://archive.org",     bg: "#444" }
   ];
 
   const VIDEO_CHIPS = ["Aviación", "Cabina A320", "Despegues", "Música", "Fórmula 1", "Tutoriales"];
@@ -120,7 +120,7 @@
       return q ? "mcf://buscar?q=" + encodeURIComponent(q) : HOME;
     }
     if (h === "bing.com" && u.pathname === "/search" && u.searchParams.get("q")) return "mcf://buscar?q=" + encodeURIComponent(u.searchParams.get("q"));
-    if (/duckduckgo\.com$/.test(h) && u.searchParams.get("q")) return "mcf://buscar?q=" + encodeURIComponent(u.searchParams.get("q"));
+    if (/duckduckgo\.com$/.test(h)) return u.searchParams.get("q") ? "mcf://buscar?q=" + encodeURIComponent(u.searchParams.get("q")) : HOME;
     return url;
   }
 
@@ -129,7 +129,7 @@
     if (!url.startsWith("mcf://")) return url;
     const u = new URL(url.replace("mcf://", "https://mcf.local/"));
     const q = u.searchParams.get("q");
-    if (u.pathname === "/buscar") return "https://www.google.com/search?q=" + encodeURIComponent(q || "");
+    if (u.pathname === "/buscar") return "https://duckduckgo.com/?q=" + encodeURIComponent(q || "");
     if (u.pathname === "/videos/ver") return "https://www.youtube.com/watch?v=" + encodeURIComponent(u.searchParams.get("v"));
     if (u.pathname === "/videos") return q ? "https://www.youtube.com/results?search_query=" + encodeURIComponent(q) : "https://www.youtube.com";
     return null;
@@ -299,19 +299,23 @@
     return { title: sum.title, text: sum.extract, img: sum.thumbnail && sum.thumbnail.source, url: sum.content_urls && sum.content_urls.desktop.page };
   }
 
-  /* Sugerencias de Google (JSONP, porque no tiene CORS) */
-  let sugSeq = 0;
-  function googleSuggest(q) {
-    return new Promise((resolve) => {
-      const cb = "__nbSug" + (++sugSeq);
-      const s = document.createElement("script");
-      const done = (v) => { delete window[cb]; s.remove(); resolve(v); };
-      window[cb] = (data) => done((data && data[1] || []).map(x => Array.isArray(x) ? x[0] : x).slice(0, 6));
-      s.onerror = () => done([]);
-      setTimeout(() => window[cb] && done([]), 2500);
-      s.src = "https://suggestqueries.google.com/complete/search?client=youtube&hl=es&q=" + encodeURIComponent(q) + "&callback=" + cb;
-      document.head.appendChild(s);
-    });
+  /* Sugerencias mientras escribes. Sin Google: DuckDuckGo si tienes proxy propio
+     (DuckDuckGo no deja que una web le pregunte directamente) o Wikipedia, que es abierta. */
+  async function webSuggest(q) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 2500);
+    try {
+      const mine = NebulaConfig.getProxy();
+      if (mine) {
+        const target = "https://duckduckgo.com/ac/?type=list&kl=es-es&q=" + encodeURIComponent(q);
+        const url = mine.includes("{url}") ? mine.replace("{url}", encodeURIComponent(target)) : mine + (mine.includes("?") ? "&" : "?") + "url=" + encodeURIComponent(target);
+        const d = await fetch(url, { signal: ctrl.signal }).then(r => r.json()).catch(() => null);
+        if (d && d[1] && d[1].length) return d[1].slice(0, 6);
+      }
+      const w = await fetch("https://es.wikipedia.org/w/api.php?action=opensearch&limit=6&namespace=0&format=json&origin=*&search=" + encodeURIComponent(q), { signal: ctrl.signal }).then(r => r.json());
+      return (w && w[1]) || [];
+    } catch { return []; }
+    finally { clearTimeout(t); }
   }
 
   /* ================================================================
@@ -684,7 +688,7 @@
         items = (isUrl ? [{ kind: "url", label: q, sub: "Ir a la web", value: q }] : [{ kind: "q", label: q, value: q }]).concat(local);
         draw();
         if (tab && tab.private) return;
-        const sugs = await googleSuggest(q);
+        const sugs = await webSuggest(q);
         if (my !== token || document.activeElement !== input) return;
         items = items.concat(sugs.filter(s => s.toLowerCase() !== ql).slice(0, 7 - items.length).map(s => ({ kind: "q", label: s, value: s })));
         draw();
@@ -779,7 +783,7 @@
         <nav class="b-serp-tabs">
           <button class="on">Todo</button>
           <button data-go="videos">Vídeos</button>
-          <button data-go="google">Ver en Google</button>
+          <button data-go="ddg">Abrir en DuckDuckGo ↗</button>
         </nav>
         <div class="b-serp-body">
           <main class="b-serp-main">
@@ -791,7 +795,7 @@
         </div>`);
       div.querySelector(".b-sbox-slot").replaceWith(searchBox(tab, q, "Buscar", (v) => navigate(tab, v)));
       div.querySelector('[data-go="videos"]').onclick = () => navigate(tab, "mcf://videos?q=" + encodeURIComponent(q));
-      div.querySelector('[data-go="google"]').onclick = () => navigate(tab, "https://www.google.com/search?igu=1&q=" + encodeURIComponent(q), { mode: "direct" });
+      div.querySelector('[data-go="ddg"]').onclick = () => window.open("https://duckduckgo.com/?q=" + encodeURIComponent(q), "_blank", "noopener");
       const list = div.querySelector(".b-results");
       tabLoading(tab, true);
 
@@ -845,11 +849,11 @@
           const main = div.querySelector(".b-serp-main");
           main.insertAdjacentHTML("beforeend", `
             <div class="b-serp-fallback">
-              <p>No se pudieron leer los resultados (${esc(err.message)}). Te muestro Google aquí mismo:</p>
+              <p>No se pudieron leer los resultados (${esc(err.message)}). Te muestro Bing aquí mismo:</p>
               <div class="b-serp-gframe"></div>
             </div>`);
           const f = makeFrame(tab, false, main.querySelector(".b-serp-gframe"));
-          f.src = "https://www.google.com/search?igu=1&q=" + encodeURIComponent(q);
+          f.src = "https://www.bing.com/search?setlang=es&q=" + encodeURIComponent(q);
         } finally {
           if (tab.loadId === loadId) tabLoading(tab, false);
         }
@@ -1091,6 +1095,7 @@
 
     win = createWindow({ id: "browser", title: "Nebula", width: 1040, height: 660, body });
     win._nebula = { newTab };
+    if (typeof toggleMax === "function") toggleMax(win);
 
     const obs = new MutationObserver(() => {
       if (!win.isConnected) {

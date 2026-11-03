@@ -78,12 +78,19 @@ function createWindow({ id, title, width = 720, height = 480, x, y, body }) {
   let drag = null;
   titlebar.addEventListener("pointerdown", (e) => {
     if (e.target.closest(".win-dot")) return;
-    drag = { x: e.clientX - w.offsetLeft, y: e.clientY - w.offsetTop };
+    drag = { x: e.clientX - w.offsetLeft, y: e.clientY - w.offsetTop, sx: e.clientX, sy: e.clientY };
     titlebar.setPointerCapture(e.pointerId);
     focusWindow(id);
   });
   titlebar.addEventListener("pointermove", (e) => {
     if (!drag) return;
+    // arrastrar una ventana maximizada la restaura bajo el cursor (como en Windows)
+    if (w.classList.contains("max")) {
+      if (Math.abs(e.clientY - drag.sy) < 6 && Math.abs(e.clientX - drag.sx) < 6) return;
+      toggleMax(w, false);
+      drag.x = Math.min(w.offsetWidth / 2, drag.sx);
+      drag.y = 20;
+    }
     w.style.left = Math.max(0, e.clientX - drag.x) + "px";
     w.style.top = Math.max(32, e.clientY - drag.y) + "px";
   });
@@ -91,7 +98,9 @@ function createWindow({ id, title, width = 720, height = 480, x, y, body }) {
 
   // Controls
   w.querySelector(".win-close").onclick = () => closeWindow(id);
-  w.querySelector(".win-min").onclick = () => w.classList.toggle("minimized");
+  w.querySelector(".win-min").onclick = () => { w.classList.toggle("minimized"); syncMaxState(); };
+  // doble clic en la barra de título = maximizar / restaurar
+  titlebar.addEventListener("dblclick", (e) => { if (!e.target.closest(".win-dot")) toggleMax(w); });
   w.querySelector(".win-max").onclick = () => toggleMax(w);
 
   // Focus on click
@@ -108,6 +117,7 @@ function closeWindow(id) {
   if (!w) return;
   w.remove();
   delete openWindows[id];
+  syncMaxState();
   const remaining = Object.values(openWindows);
   if (remaining.length) ActiveAppLbl.textContent = remaining[remaining.length - 1].dataset.app;
   else ActiveAppLbl.textContent = "Escritorio";
@@ -119,24 +129,21 @@ function focusWindow(id) {
   if (!w) return;
   w.style.zIndex = ++zIndex;
   w.classList.remove("minimized");
+  syncMaxState();
   ActiveAppLbl.textContent = w.dataset.app;
 }
 
-function toggleMax(w) {
-  if (w.dataset.max) {
-    const prev = JSON.parse(w.dataset.max);
-    Object.assign(w.style, prev);
-    delete w.dataset.max;
-  } else {
-    w.dataset.max = JSON.stringify({
-      left: w.style.left, top: w.style.top,
-      width: w.style.width, height: w.style.height
-    });
-    w.style.left = "10px";
-    w.style.top = "42px";
-    w.style.width = (window.innerWidth - 20) + "px";
-    w.style.height = (window.innerHeight - 130) + "px";
-  }
+/* Maximizar como en Windows: la ventana ocupa toda la pantalla bajo la barra
+   superior, sin bordes, y el dock se esconde (reaparece al llevar el ratón abajo) */
+function toggleMax(w, force) {
+  const on = force !== undefined ? force : !w.classList.contains("max");
+  w.classList.toggle("max", on);
+  w.querySelector(".win-max").title = on ? "Restaurar" : "Maximizar";
+  syncMaxState();
+}
+function syncMaxState() {
+  const any = Object.values(openWindows).some(w => w.classList.contains("max") && !w.classList.contains("minimized"));
+  document.body.classList.toggle("has-max", any);
 }
 
 function updateDock() {

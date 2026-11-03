@@ -65,7 +65,7 @@ Arrastra la carpeta a vercel.com o netlify.com → se despliega sin configuraci�
 
 Además tiene páginas propias:
 
-- **Buscador** — escribe cualquier cosa en la barra: resultados web (DuckDuckGo), vídeos y ficha de Wikipedia. Mientras escribes salen sugerencias. Si los resultados fallan, enseña Google incrustado.
+- **Buscador** — sin Google: resultados de DuckDuckGo, vídeos y ficha de Wikipedia, con sugerencias de Wikipedia mientras escribes (de DuckDuckGo si tienes proxy propio). Si los resultados fallan, enseña Bing incrustado.
 - **Vídeos** — al entrar en youtube.com se abre el buscador de vídeos de Nebula. Los vídeos se reproducen con el reproductor oficial de YouTube dentro de la ventana.
 - **Incógnito** — botón del antifaz junto al `+`, o `Alt+Shift+N`. No guarda historial ni sugerencias y las webs cargan sin tus cookies.
 - **Historial y favoritos** — botones del reloj y la estrella.

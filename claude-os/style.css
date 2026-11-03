@@ -201,6 +201,21 @@ body.no-zulu #zulu { display: none; }
 }
 .window.minimized { display: none; }
 
+/* ---- Maximizada (estilo Windows): toda la pantalla bajo la barra superior ---- */
+.window.max {
+  position: fixed;
+  left: 0 !important; right: 0 !important; bottom: 0 !important;
+  top: 32px !important;
+  width: auto !important; height: auto !important;
+  min-width: 0 !important;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+}
+#dock { transition: transform 0.25s ease, opacity 0.25s ease; }
+body.has-max #dock { transform: translate(-50%, calc(100% - 6px)); opacity: 0.35; }
+body.has-max #dock:hover { transform: translate(-50%, 0); opacity: 1; }
+
 .win-titlebar {
   height: 40px;
   padding: 0 14px;
@@ -1064,7 +1079,7 @@ body.no-zulu #zulu { display: none; }
 /* ---- Responsive ---- */
 @media (max-width: 640px) {
   #desktop-icons { grid-template-columns: repeat(3, 1fr); right: 10px; left: 10px; top: 10px; }
-  .window { min-width: 90vw !important; width: 90vw !important; left: 5vw !important; }
+  .window:not(.max) { min-width: 90vw !important; width: 90vw !important; left: 5vw !important; }
   .dock-glyph { width: 40px; height: 40px; font-size: 20px; }
   .finder, .notes { grid-template-columns: 1fr; }
   .finder-side, .notes-list { display: none; }
