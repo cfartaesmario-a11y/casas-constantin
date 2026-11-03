@@ -6,7 +6,7 @@
 <title>MCF OS</title>
 <meta name="theme-color" content="#0a0d14">
 <meta http-equiv="Cache-Control" content="no-cache">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap">
@@ -115,7 +115,7 @@
 
   <script>
     /* Si hay una versión nueva publicada, recarga sola saltándose la caché */
-    window.MCF_VERSION = "4";
+    window.MCF_VERSION = "5";
     fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then(r => r.json())
       .then(v => {
@@ -126,8 +126,8 @@
       })
       .catch(() => {});
   </script>
-  <script src="os.js?v=4"></script>
-  <script src="apps/icons.js?v=4"></script>
-  <script src="apps/browser.js?v=4"></script>
+  <script src="os.js?v=5"></script>
+  <script src="apps/icons.js?v=5"></script>
+  <script src="apps/browser.js?v=5"></script>
 </body>
 </html>

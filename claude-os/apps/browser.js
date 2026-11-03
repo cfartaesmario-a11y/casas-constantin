@@ -511,10 +511,11 @@
       if (win) win.querySelector(".win-title").textContent = tab.title || "Nebula";
     }
 
+    /* La barra de direcciones solo muestra direcciones: lo que buscas
+       se queda en el buscador de la página, no se copia aquí */
     function displayUrl(url) {
       if (!url || url === HOME) return "";
-      const m = url.match(/^mcf:\/\/buscar\?q=(.*)$/);
-      if (m) return decodeURIComponent(m[1].replace(/\+/g, " "));
+      if (url.startsWith("mcf://")) return url.split("?")[0];
       return url;
     }
 
@@ -916,10 +917,12 @@
       setTitle(tab, "Vídeo");
       const div = page(tab, "b-watch", `
         <div class="b-player"></div>
+        <p class="b-watch-tip">Si el vídeo dice "no disponible", ábrelo en <b>Ventana flotante</b>: algunos canales no dejan verlos dentro de otras webs.</p>
         <div class="b-watch-info">
           <h2 class="b-watch-title">&nbsp;</h2>
           <div class="b-watch-meta"></div>
           <div class="b-watch-actions">
+            <button data-a="float">Ventana flotante</button>
             <button data-a="yt">Ver en YouTube ↗</button>
             ${q ? `<button data-a="back">Volver a "${esc(q)}"</button>` : ""}
           </div>
@@ -936,6 +939,11 @@
       const host = tab.private ? "https://www.youtube-nocookie.com" : "https://www.youtube.com";
       f.src = `${host}/embed/${encodeURIComponent(id)}?rel=0&playsinline=1&hl=es`;
       div.querySelector(".b-player").appendChild(f);
+      div.querySelector('[data-a="float"]').onclick = () => {
+        const w = Math.min(1100, screen.availWidth - 80), h = Math.round(w * 9 / 16) + 60;
+        window.open("https://www.youtube.com/watch?v=" + encodeURIComponent(id), "mcf-video", `popup,width=${w},height=${h},left=40,top=40`);
+        f.src = "about:blank";
+      };
       div.querySelector('[data-a="yt"]').onclick = () => window.open("https://www.youtube.com/watch?v=" + encodeURIComponent(id), "_blank", "noopener");
       const back = div.querySelector('[data-a="back"]');
       if (back) back.onclick = () => navigate(tab, "mcf://videos?q=" + encodeURIComponent(q));
