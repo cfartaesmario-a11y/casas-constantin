@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Claude OS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap">
+</head>
+<body>
+
+  <!-- =========== WALLPAPER / BACKGROUND LAYER =========== -->
+  <div id="wallpaper">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="grain"></div>
+  </div>
+
+  <!-- =========== TOP BAR =========== -->
+  <header id="topbar">
+    <div class="tb-left">
+      <span class="logo-c" aria-hidden="true"></span>
+      <span class="tb-title">Claude OS</span>
+    </div>
+    <div class="tb-center">
+      <span id="active-app">Finder</span>
+    </div>
+    <div class="tb-right">
+      <span class="indicator" title="Online"></span>
+      <span id="battery">87%</span>
+      <span id="clock">—</span>
+    </div>
+  </header>
+
+  <!-- =========== DESKTOP =========== -->
+  <main id="desktop">
+    <!-- Desktop icons -->
+    <div id="desktop-icons">
+      <button class="d-icon" data-launch="finder">
+        <span class="d-glyph" style="background:linear-gradient(135deg,#7cc5ff,#4a90e2)">📁</span>
+        <span>Finder</span>
+      </button>
+      <button class="d-icon" data-launch="browser">
+        <span class="d-glyph" style="background:linear-gradient(135deg,#c9a8ff,#8e6bff)">🌐</span>
+        <span>Navegador</span>
+      </button>
+      <button class="d-icon" data-launch="notes">
+        <span class="d-glyph" style="background:linear-gradient(135deg,#ffd36b,#ffa06b)">📝</span>
+        <span>Notas</span>
+      </button>
+      <button class="d-icon" data-launch="terminal">
+        <span class="d-glyph" style="background:linear-gradient(135deg,#1a1f2a,#000)">⌨</span>
+        <span>Terminal</span>
+      </button>
+      <button class="d-icon" data-launch="chat">
+        <span class="d-glyph" style="background:linear-gradient(135deg,#ff7bff,#8e6bff)">✧</span>
+        <span>Claude</span>
+      </button>
+      <button class="d-icon" data-launch="settings">
+        <span class="d-glyph" style="background:linear-gradient(135deg,#9aa3b4,#4a5568)">⚙</span>
+        <span>Ajustes</span>
+      </button>
+    </div>
+
+    <!-- Windows get injected here -->
+    <div id="windows-layer"></div>
+  </main>
+
+  <!-- =========== DOCK =========== -->
+  <nav id="dock">
+    <div class="dock-inner">
+      <button class="dock-item" data-launch="finder" title="Finder">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#7cc5ff,#4a90e2)">📁</span>
+      </button>
+      <button class="dock-item" data-launch="browser" title="Navegador">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#c9a8ff,#8e6bff)">🌐</span>
+      </button>
+      <button class="dock-item" data-launch="notes" title="Notas">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#ffd36b,#ffa06b)">📝</span>
+      </button>
+      <button class="dock-item" data-launch="terminal" title="Terminal">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#1a1f2a,#000)">⌨</span>
+      </button>
+      <button class="dock-item" data-launch="chat" title="Claude Chat">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#ff7bff,#8e6bff)">✧</span>
+      </button>
+      <div class="dock-sep"></div>
+      <button class="dock-item" data-launch="settings" title="Ajustes">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#9aa3b4,#4a5568)">⚙</span>
+      </button>
+      <button class="dock-item" data-launch="about" title="Acerca de">
+        <span class="dock-glyph" style="background:linear-gradient(135deg,#58e38a,#2a9d5a)">ℹ</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- =========== BOOT SPLASH =========== -->
+  <div id="boot">
+    <div class="boot-logo">
+      <div class="boot-c"></div>
+    </div>
+    <div class="boot-text">Claude OS</div>
+    <div class="boot-bar"><span></span></div>
+  </div>
+
+  <script src="os.js"></script>
+  <script src="apps/browser.js"></script>
+</body>
+</html>
