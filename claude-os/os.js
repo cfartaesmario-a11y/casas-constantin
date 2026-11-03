@@ -18,6 +18,19 @@ function tickClock() {
 }
 setInterval(tickClock, 1000); tickClock();
 
+/* Hora Zulu (UTC), como en cabina */
+function tickZulu() {
+  const z = document.getElementById("zulu");
+  if (!z) return;
+  const d = new Date();
+  z.textContent = String(d.getUTCHours()).padStart(2, "0") + String(d.getUTCMinutes()).padStart(2, "0") + "Z";
+}
+setInterval(tickZulu, 1000); tickZulu();
+function prefGet(k, d) { try { const v = localStorage.getItem("mcf." + k); return v === null ? d : JSON.parse(v); } catch { return d; } }
+function prefSet(k, v) { try { localStorage.setItem("mcf." + k, JSON.stringify(v)); } catch {} }
+document.body.classList.toggle("no-zulu", !prefGet("pilot", true));
+(function () { const c = prefGet("accent", null); if (c) document.documentElement.style.setProperty("--accent", c); })();
+
 /* ---------------- BOOT ---------------- */
 setTimeout(() => {
   document.getElementById("boot").classList.add("gone");
@@ -34,6 +47,7 @@ function createWindow({ id, title, width = 720, height = 480, x, y, body }) {
   const w = document.createElement("div");
   w.className = "window";
   w.dataset.id = id;
+  w.dataset.app = title;
   w.style.width = width + "px";
   w.style.height = height + "px";
 
@@ -45,13 +59,13 @@ function createWindow({ id, title, width = 720, height = 480, x, y, body }) {
 
   w.innerHTML = `
     <div class="win-titlebar">
-      <div class="win-controls">
-        <button class="win-dot win-close" title="Cerrar"></button>
-        <button class="win-dot win-min" title="Minimizar"></button>
-        <button class="win-dot win-max" title="Maximizar"></button>
-      </div>
+      <span class="win-accent"></span>
       <div class="win-title">${title}</div>
-      <div style="width:52px"></div>
+      <div class="win-controls">
+        <button class="win-dot win-min" title="Minimizar"><svg viewBox="0 0 12 12"><path d="M2.5 6h7"/></svg></button>
+        <button class="win-dot win-max" title="Maximizar"><svg viewBox="0 0 12 12"><rect x="2.5" y="2.5" width="7" height="7" rx="1.5"/></svg></button>
+        <button class="win-dot win-close" title="Cerrar"><svg viewBox="0 0 12 12"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
+      </div>
     </div>
     <div class="win-body"></div>
   `;
@@ -63,7 +77,7 @@ function createWindow({ id, title, width = 720, height = 480, x, y, body }) {
   const titlebar = w.querySelector(".win-titlebar");
   let drag = null;
   titlebar.addEventListener("pointerdown", (e) => {
-    if (e.target.classList.contains("win-dot")) return;
+    if (e.target.closest(".win-dot")) return;
     drag = { x: e.clientX - w.offsetLeft, y: e.clientY - w.offsetTop };
     titlebar.setPointerCapture(e.pointerId);
     focusWindow(id);
@@ -95,8 +109,8 @@ function closeWindow(id) {
   w.remove();
   delete openWindows[id];
   const remaining = Object.values(openWindows);
-  if (remaining.length) ActiveAppLbl.textContent = remaining[remaining.length - 1].querySelector(".win-title").textContent;
-  else ActiveAppLbl.textContent = "Finder";
+  if (remaining.length) ActiveAppLbl.textContent = remaining[remaining.length - 1].dataset.app;
+  else ActiveAppLbl.textContent = "Escritorio";
   updateDock();
 }
 
@@ -105,7 +119,7 @@ function focusWindow(id) {
   if (!w) return;
   w.style.zIndex = ++zIndex;
   w.classList.remove("minimized");
-  ActiveAppLbl.textContent = w.querySelector(".win-title").textContent;
+  ActiveAppLbl.textContent = w.dataset.app;
 }
 
 function toggleMax(w) {
@@ -147,7 +161,7 @@ const Apps = {
         <button>🎵 Música</button>
         <button>🖼 Fotos</button>
         <h4 style="margin-top:16px">Ubicaciones</h4>
-        <button>💾 Claude OS</button>
+        <button>💾 MCF OS</button>
         <button>☁ iCloud</button>
       </aside>
       <main class="finder-main">
@@ -163,7 +177,7 @@ const Apps = {
           <div class="file"><span class="ficon">📄</span><span>README.md</span></div>
         </div>
       </main>`;
-    createWindow({ id: "finder", title: "Finder", width: 720, height: 460, body });
+    createWindow({ id: "finder", title: "Archivos", width: 720, height: 460, body });
   },
 
   // ============ BROWSER ============
@@ -212,13 +226,13 @@ const Apps = {
     const body = document.createElement("div");
     body.className = "terminal";
     body.innerHTML = `
-      <div class="term-line"><span style="color:var(--accent)">Claude OS</span> v1.0 · bash 5.1</div>
+      <div class="term-line"><span style="color:var(--accent)">MCF OS</span> v2.0 · bash 5.1</div>
       <div class="term-line">Last login: ${new Date().toLocaleString("es-ES")}</div>
       <div class="term-line">Escribe <b>help</b> para ver comandos.</div>
       <div class="term-line">&nbsp;</div>
       <div id="term-out"></div>
       <div class="term-input">
-        <span class="term-prompt">mario@claude-os:~$</span>
+        <span class="term-prompt">mario@mcf-os:~$</span>
         <input autofocus>
       </div>`;
 
@@ -227,7 +241,7 @@ const Apps = {
 
     const fs = {
       "~": ["Documents", "Downloads", "Projects", "README.md"],
-      "~/Projects": ["2BATX", "Pe-Harta", "FPV", "claude-os"],
+      "~/Projects": ["2BATX", "Pe-Harta", "FPV", "mcf-os"],
       "~/Documents": ["TdR.pdf", "notas.xlsx"]
     };
     let cwd = "~";
@@ -254,7 +268,7 @@ const Apps = {
         if (fs[target]) { cwd = target; return ""; }
         return "cd: no such directory: " + a;
       },
-      cat: (a) => a === "README.md" ? "# Claude OS\n\nUn sistema operativo web hecho enteramente con Claude.\nCreado por Mario Costin." : "cat: " + a + ": No such file",
+      cat: (a) => a === "README.md" ? "# MCF OS\n\nMi sistema operativo web.\nCreado por Mario Costin." : "cat: " + a + ": No such file",
       echo: (a) => a || "",
       date: () => new Date().toString(),
       whoami: () => "mario",
@@ -268,13 +282,13 @@ const Apps = {
         return (priv ? "Abriendo en incógnito: " : "Abriendo en Nebula: ") + (q || "nueva pestaña");
       },
       neofetch: () => `
-         ⬤⬤⬤          mario@claude-os
+         ⬤⬤⬤          mario@mcf-os
        ⬤⬤⬤⬤⬤⬤        ─────────────────
-      ⬤⬤⬤⬤⬤⬤⬤⬤       OS:       Claude OS 1.0
+      ⬤⬤⬤⬤⬤⬤⬤⬤       OS:       MCF OS 2.0
      ⬤⬤⬤  ⬤⬤⬤⬤⬤       Kernel:   browser-6.1
       ⬤⬤⬤⬤⬤⬤⬤⬤       Shell:    bash 5.1
        ⬤⬤⬤⬤⬤⬤        DE:       Liquid Glass
-         ⬤⬤⬤          Theme:    Claude Dark
+         ⬤⬤⬤          Theme:    Night Cockpit
                       Memory:   314M / 8GB
                       Uptime:   ${Math.floor(performance.now()/1000)}s`,
       claude: (a) => a ? `Claude: "${a}" — abre la app Claude en el dock para una respuesta real.` : "uso: claude <pregunta>"
@@ -289,7 +303,7 @@ const Apps = {
 
       const promptLine = document.createElement("div");
       promptLine.className = "term-line";
-      promptLine.innerHTML = `<span class="term-prompt">mario@claude-os:${cwd}$</span> ${line}`;
+      promptLine.innerHTML = `<span class="term-prompt">mario@mcf-os:${cwd}$</span> ${line}`;
       out.appendChild(promptLine);
 
       if (!cmd) { input.value = ""; return; }
@@ -315,7 +329,7 @@ const Apps = {
     body.className = "chat";
     body.innerHTML = `
       <div class="chat-messages">
-        <div class="msg bot">¡Hola, Mario! Soy Claude, dentro de Claude OS. Pregúntame lo que quieras.</div>
+        <div class="msg bot">¡Hola, Mario! Soy Claude, dentro de MCF OS. Pregúntame lo que quieras.</div>
         <div class="msg bot">Esta es una demo local: para respuestas reales conecta la API de Anthropic en <code>os.js</code> (función <code>callClaude</code>).</div>
       </div>
       <div class="chat-input">
@@ -366,7 +380,7 @@ const Apps = {
     body.className = "settings";
     body.innerHTML = `
       <h2 class="app-h1">Ajustes</h2>
-      <p class="app-sub">Personaliza tu Claude OS.</p>
+      <p class="app-sub">Personaliza tu MCF OS.</p>
 
       <div class="set-row">
         <div>
@@ -374,11 +388,11 @@ const Apps = {
           <small>Cambia el color principal del sistema.</small>
         </div>
         <div class="swatch-row">
-          <div class="swatch sel" style="background:#d97757" data-c="#d97757"></div>
-          <div class="swatch" style="background:#7cc5ff" data-c="#7cc5ff"></div>
-          <div class="swatch" style="background:#c9a8ff" data-c="#c9a8ff"></div>
-          <div class="swatch" style="background:#58e38a" data-c="#58e38a"></div>
-          <div class="swatch" style="background:#ff6b6b" data-c="#ff6b6b"></div>
+          <div class="swatch" style="background:#ff9f1c" data-c="#ff9f1c" title="Ámbar"></div>
+          <div class="swatch" style="background:#3ee0d0" data-c="#3ee0d0" title="Cabina"></div>
+          <div class="swatch" style="background:#4d8dff" data-c="#4d8dff" title="Cielo"></div>
+          <div class="swatch" style="background:#c9a8ff" data-c="#c9a8ff" title="Nebula"></div>
+          <div class="swatch" style="background:#ff5a6e" data-c="#ff5a6e" title="Postcombustión"></div>
         </div>
       </div>
 
@@ -405,7 +419,7 @@ const Apps = {
       <div class="set-row set-col">
         <div>
           <label>Proxy del navegador</label>
-          <small>URL de tu proxy (p. ej. tu Cloudflare Worker de <code>proxy-worker.js</code>). Vacío = proxies públicos de reserva.</small>
+          <small>Opcional. Nebula ya funciona sin nada. Si pones tu propio proxy (Cloudflare Worker de <code>proxy-worker.js</code>) las webs cargan más rápido y sin límites.</small>
         </div>
         <input id="in-proxy" class="set-input" placeholder="https://nebula-proxy.TU-USUARIO.workers.dev" spellcheck="false">
       </div>
@@ -413,9 +427,9 @@ const Apps = {
       <div class="set-row">
         <div>
           <label>Modo piloto</label>
-          <small>Añade widgets de aviación al escritorio (hora Zulu, METAR).</small>
+          <small>Muestra la hora Zulu (UTC) en la barra superior.</small>
         </div>
-        <input type="checkbox">
+        <input type="checkbox" id="ck-pilot">
       </div>`;
 
     body.querySelectorAll(".swatch").forEach(sw => {
@@ -423,6 +437,7 @@ const Apps = {
         body.querySelectorAll(".swatch").forEach(s => s.classList.remove("sel"));
         sw.classList.add("sel");
         document.documentElement.style.setProperty("--accent", sw.dataset.c);
+        prefSet("accent", sw.dataset.c);
       };
     });
 
@@ -432,6 +447,12 @@ const Apps = {
         el.style.webkitBackdropFilter = e.target.checked ? "none" : "";
       });
     };
+
+    const curAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim().toLowerCase();
+    body.querySelectorAll(".swatch").forEach(s => s.classList.toggle("sel", s.dataset.c === curAccent));
+    const pilot = body.querySelector("#ck-pilot");
+    pilot.checked = prefGet("pilot", true);
+    pilot.onchange = () => { prefSet("pilot", pilot.checked); document.body.classList.toggle("no-zulu", !pilot.checked); };
 
     const proxyIn = body.querySelector("#in-proxy");
     if (window.NebulaConfig) {
@@ -447,18 +468,18 @@ const Apps = {
     const body = document.createElement("div");
     body.className = "about";
     body.innerHTML = `
-      <div class="about-logo"></div>
-      <h2>Claude OS</h2>
-      <p>Versión 1.0 · Liquid Glass</p>
+      <div class="about-logo">${document.querySelector(".logo-mcf").innerHTML.replace(/mcfg-tb/g, "mcfg-about")}</div>
+      <h2>MCF<span>OS</span></h2>
+      <p>Versión 2.0 · Night Cockpit</p>
       <p style="max-width:360px;margin:16px auto;line-height:1.6">
-        Un entorno de escritorio web construido enteramente con Claude.
-        Dock, ventanas arrastrables, navegador, terminal, notas y chat.
+        Mi escritorio en la web: ventanas, navegador Nebula con incógnito
+        y vídeos, terminal, notas y hora Zulu para cuando vuele.
       </p>
       <div class="meta">
-        BUILT BY MARIO COSTIN · PINEDA DE MAR<br>
-        ${new Date().getFullYear()} · MADE WITH CLAUDE
+        MARIO COSTIN · PINEDA DE MAR<br>
+        ${new Date().getFullYear()} · MCF OS
       </div>`;
-    createWindow({ id: "about", title: "Acerca de Claude OS", width: 420, height: 440, body });
+    createWindow({ id: "about", title: "Acerca de MCF OS", width: 420, height: 440, body });
   }
 };
 

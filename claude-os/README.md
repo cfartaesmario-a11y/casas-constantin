@@ -1,13 +1,13 @@
-# Claude OS
+# MCF OS
 
-Un entorno de escritorio web construido enteramente con Claude. Liquid glass, ventanas arrastrables, dock animado, navegador dentro del "SO", terminal interactiva, notas, chat y ajustes.
+Mi escritorio en la web, con estética de cabina nocturna: ventanas arrastrables, dock, navegador Nebula (con buscador propio, vídeos e incógnito), terminal, notas, chat con Claude y hora Zulu en la barra superior.
 
-![version](https://img.shields.io/badge/version-1.0-d97757)
+![version](https://img.shields.io/badge/version-2.0-ff9f1c)
 ![status](https://img.shields.io/badge/status-live-58e38a)
 
 ## Qué incluye
 
-- **Finder** — explorador de archivos con barra lateral
+- **Archivos** — explorador de archivos con barra lateral
 - **Nebula** — navegador real dentro del SO: pestañas, historial atrás/adelante, búsqueda en Google, favoritos y carga de webs vía iframe directo o proxy
 - **Terminal** — bash falso con comandos (`ls`, `cat`, `neofetch`, `claude`...)
 - **Notas** — editor con lista lateral
@@ -57,31 +57,35 @@ Arrastra la carpeta a vercel.com o netlify.com → se despliega sin configuraci�
 
 ## Nebula, el navegador
 
-Nebula abre webs de verdad dentro de la ventana. Usa dos modos (se ve en la etiqueta de la barra de dirección y se cambia con el botón ⇄):
+**No hace falta configurar nada.** Nebula abre las webs de tres formas (lo indica la etiqueta de la barra de dirección):
 
-- **Directo** — iframe normal, con todo su JavaScript. Se usa con webs que se dejan incrustar: Wikipedia, Google (búsquedas), Bing, YouTube (los vídeos se pasan a modo *embed*), OpenStreetMap, archive.org...
-- **Proxy** — la página se descarga a través de un proxy y se pinta en un iframe aislado. Así se saltan los bloqueos `X-Frame-Options`. Los enlaces y formularios siguen dentro de Nebula.
+- **Directo** — la web tal cual dentro de la ventana (Wikipedia, OpenStreetMap, archive.org...).
+- **Lectura** — la página se renderiza en un servidor (r.jina.ai) y se muestra completa pero sin JavaScript. Sirve para casi cualquier web.
+- **Proxy** — si configuras tu propio proxy, la web se carga con todo su JavaScript.
 
-También tiene **modo incógnito** (botón del antifaz junto al `+`, o `Alt+Shift+N`): las pestañas moradas no guardan historial ni sugerencias, no piden iconos a terceros y las webs cargan sin tus cookies (iframes *credentialless*, se borran al cerrar). Hay **historial** (botón del reloj) con opción de borrarlo, y los accesos directos y pestañas muestran el logo real de cada web.
+Además tiene páginas propias:
 
-Si una web no carga, sale una página con *Reintentar*, *Probar incrustada directa* y *Abrir en el navegador real*.
+- **Buscador** — escribe cualquier cosa en la barra: resultados web (DuckDuckGo), vídeos y ficha de Wikipedia. Mientras escribes salen sugerencias. Si los resultados fallan, enseña Google incrustado.
+- **Vídeos** — al entrar en youtube.com se abre el buscador de vídeos de Nebula. Los vídeos se reproducen con el reproductor oficial de YouTube dentro de la ventana.
+- **Incógnito** — botón del antifaz junto al `+`, o `Alt+Shift+N`. No guarda historial ni sugerencias y las webs cargan sin tus cookies.
+- **Historial y favoritos** — botones del reloj y la estrella.
 
-### Tu propio proxy (recomendado)
+Atajos: `Alt+T` pestaña nueva, `Alt+W` cerrar, `Alt+L` ir a la barra. Desde la Terminal: `open wikipedia.org`, `open vuelos barcelona`, `open -i ...` (incógnito).
 
-Por defecto Nebula prueba proxies públicos gratuitos, que a veces van lentos o caídos. Para que funcione siempre:
+### Proxy propio (opcional)
+
+El servicio gratuito de lectura tiene un límite de unas 20 páginas por minuto y no ejecuta JavaScript. Para más velocidad y webs completas:
 
 1. Entra en [dash.cloudflare.com](https://dash.cloudflare.com) → Workers & Pages → Create → Worker.
 2. Pega el contenido de `proxy-worker.js` y pulsa Deploy.
-3. En Settings → Variables añade `ALLOWED_ORIGINS` = `https://TU-USUARIO.github.io` (así solo tu web puede usarlo).
-4. En Claude OS: **Ajustes → Proxy del navegador** → pega la URL del worker.
+3. En Settings → Variables añade `ALLOWED_ORIGINS` = `https://TU-USUARIO.github.io`.
+4. En MCF OS: **Ajustes → Proxy del navegador** → pega la URL del worker.
 
-Webs con mucho JavaScript o con login (Instagram, Gmail...) no funcionan bien en modo proxy: para esas usa el botón ↗.
-
-Desde la Terminal también puedes escribir `open wikipedia.org`, `open vuelos barcelona` o `open -i wikipedia.org` (incógnito).
+Webs con login (Instagram, Gmail...) no funcionan dentro: usa el botón ↗.
 
 ## Conectar Claude de verdad
 
-El chat usa respuestas falsas por defecto. Para enganchar la API real de Anthropic, mira el comentario al final de `os.js`. **Nunca pongas tu API key en el frontend** — enruta las llamadas por un backend (Cloudflare Worker, Vercel function, etc.).
+El chat con Claude usa respuestas falsas por defecto. Para enganchar la API real de Anthropic, mira el comentario al final de `os.js`. **Nunca pongas tu API key en el frontend** — enruta las llamadas por un backend (Cloudflare Worker, Vercel function, etc.).
 
 ## Créditos
 

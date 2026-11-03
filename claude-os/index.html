@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Claude OS</title>
+<title>MCF OS</title>
+<meta name="theme-color" content="#0a0d14">
 <link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,16 +23,17 @@
   <!-- =========== TOP BAR =========== -->
   <header id="topbar">
     <div class="tb-left">
-      <span class="logo-c" aria-hidden="true"></span>
-      <span class="tb-title">Claude OS</span>
+      <span class="logo-mcf"><svg class="mcf-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="mcfg-tb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffc65c"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#mcfg-tb)"/><path d="M24 9.5 37 35.5 24 29.2 11 35.5Z" fill="#fff"/><path d="M24 9.5v19.7L11 35.5Z" fill="#fff" opacity=".72"/></svg></span>
+      <span class="tb-title">MCF<span>OS</span></span>
     </div>
     <div class="tb-center">
-      <span id="active-app">Finder</span>
+      <span id="active-app">Escritorio</span>
     </div>
     <div class="tb-right">
       <span class="indicator" title="Online"></span>
       <span id="battery">87%</span>
       <span id="clock">—</span>
+      <span id="zulu" title="Hora Zulu (UTC)">—</span>
     </div>
   </header>
 
@@ -41,7 +43,7 @@
     <div id="desktop-icons">
       <button class="d-icon" data-launch="finder">
         <span class="d-glyph" style="background:linear-gradient(135deg,#7cc5ff,#4a90e2)">📁</span>
-        <span>Finder</span>
+        <span>Archivos</span>
       </button>
       <button class="d-icon" data-launch="browser">
         <span class="d-glyph" style="background:linear-gradient(135deg,#c9a8ff,#8e6bff)">🌐</span>
@@ -72,7 +74,7 @@
   <!-- =========== DOCK =========== -->
   <nav id="dock">
     <div class="dock-inner">
-      <button class="dock-item" data-launch="finder" title="Finder">
+      <button class="dock-item" data-launch="finder" title="Archivos">
         <span class="dock-glyph" style="background:linear-gradient(135deg,#7cc5ff,#4a90e2)">📁</span>
       </button>
       <button class="dock-item" data-launch="browser" title="Navegador">
@@ -84,7 +86,7 @@
       <button class="dock-item" data-launch="terminal" title="Terminal">
         <span class="dock-glyph" style="background:linear-gradient(135deg,#1a1f2a,#000)">⌨</span>
       </button>
-      <button class="dock-item" data-launch="chat" title="Claude Chat">
+      <button class="dock-item" data-launch="chat" title="Claude">
         <span class="dock-glyph" style="background:linear-gradient(135deg,#ff7bff,#8e6bff)">✧</span>
       </button>
       <div class="dock-sep"></div>
@@ -99,10 +101,14 @@
 
   <!-- =========== BOOT SPLASH =========== -->
   <div id="boot">
-    <div class="boot-logo">
-      <div class="boot-c"></div>
-    </div>
-    <div class="boot-text">Claude OS</div>
+    <div class="boot-logo"><svg class="mcf-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="mcfg-boot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffc65c"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#mcfg-boot)"/><path d="M24 9.5 37 35.5 24 29.2 11 35.5Z" fill="#fff"/><path d="M24 9.5v19.7L11 35.5Z" fill="#fff" opacity=".72"/></svg></div>
+    <div class="boot-text">MCF<span>OS</span></div>
+    <ul class="boot-check">
+      <li><span>BATTERY</span><i></i><b>ON</b></li>
+      <li><span>AVIONICS</span><i></i><b>ON</b></li>
+      <li><span>NEBULA</span><i></i><b>READY</b></li>
+      <li><span>MCF OS</span><i></i><b>CLEARED</b></li>
+    </ul>
     <div class="boot-bar"><span></span></div>
   </div>
 
