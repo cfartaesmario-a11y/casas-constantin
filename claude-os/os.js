@@ -242,7 +242,7 @@ const Apps = {
   date        fecha y hora
   whoami      usuario
   neofetch    info del sistema
-  open <url>  abrir web en Nebula
+  open <url>  abrir web en Nebula (-i incógnito)
   claude <q>  preguntar a Claude
   clear       limpiar pantalla
   exit        cerrar terminal`,
@@ -260,7 +260,13 @@ const Apps = {
       whoami: () => "mario",
       clear: () => { out.innerHTML = ""; return null; },
       exit: () => { closeWindow("terminal"); return null; },
-      open: (a) => { if (!a) return "uso: open <url o búsqueda>"; Apps.browser(a); return "Abriendo " + a + " en Nebula..."; },
+      open: (a) => {
+        if (!a) return "uso: open [-i] <url o búsqueda>   (-i = incógnito)";
+        const priv = /^-i(\s|$)/.test(a);
+        const q = a.replace(/^-i\s*/, "");
+        Apps.browser(q || undefined, { private: priv });
+        return (priv ? "Abriendo en incógnito: " : "Abriendo en Nebula: ") + (q || "nueva pestaña");
+      },
       neofetch: () => `
          ⬤⬤⬤          mario@claude-os
        ⬤⬤⬤⬤⬤⬤        ─────────────────

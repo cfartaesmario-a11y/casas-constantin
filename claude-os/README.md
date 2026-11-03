@@ -62,6 +62,8 @@ Nebula abre webs de verdad dentro de la ventana. Usa dos modos (se ve en la etiq
 - **Directo** — iframe normal, con todo su JavaScript. Se usa con webs que se dejan incrustar: Wikipedia, Google (búsquedas), Bing, YouTube (los vídeos se pasan a modo *embed*), OpenStreetMap, archive.org...
 - **Proxy** — la página se descarga a través de un proxy y se pinta en un iframe aislado. Así se saltan los bloqueos `X-Frame-Options`. Los enlaces y formularios siguen dentro de Nebula.
 
+También tiene **modo incógnito** (botón del antifaz junto al `+`, o `Alt+Shift+N`): las pestañas moradas no guardan historial ni sugerencias, no piden iconos a terceros y las webs cargan sin tus cookies (iframes *credentialless*, se borran al cerrar). Hay **historial** (botón del reloj) con opción de borrarlo, y los accesos directos y pestañas muestran el logo real de cada web.
+
 Si una web no carga, sale una página con *Reintentar*, *Probar incrustada directa* y *Abrir en el navegador real*.
 
 ### Tu propio proxy (recomendado)
@@ -75,7 +77,7 @@ Por defecto Nebula prueba proxies públicos gratuitos, que a veces van lentos o 
 
 Webs con mucho JavaScript o con login (Instagram, Gmail...) no funcionan bien en modo proxy: para esas usa el botón ↗.
 
-Desde la Terminal también puedes escribir `open wikipedia.org` o `open vuelos barcelona`.
+Desde la Terminal también puedes escribir `open wikipedia.org`, `open vuelos barcelona` o `open -i wikipedia.org` (incógnito).
 
 ## Conectar Claude de verdad
 

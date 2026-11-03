@@ -17,6 +17,23 @@
 (function () {
   const STORE_PROXY = "nebula.proxy";
   const STORE_BOOKMARKS = "nebula.bookmarks";
+  const STORE_HISTORY = "nebula.history";
+  const HISTORY_MAX = 200;
+  let iconSeq = 0;
+  // cada copia de un SVG lleva ids propios: si un gradiente vive en una pestaña oculta, no rompe las demás
+  const ICON = (name) => {
+    const svg = (window.UIIcons && UIIcons[name]) || "";
+    const n = ++iconSeq;
+    return svg.replace(/id="([\w-]+)"/g, `id="$1-n${n}"`).replace(/url\(#([\w-]+)\)/g, `url(#$1-n${n})`);
+  };
+
+  /* Favicon real de una web (servicio de Google). En incógnito no se pide nada a terceros. */
+  function faviconUrl(url) {
+    try {
+      const h = new URL(url).hostname;
+      return h ? "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(h) : "";
+    } catch { return ""; }
+  }
 
   const PUBLIC_PROXIES = [
     (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
@@ -31,12 +48,12 @@
   ];
 
   const DEFAULT_SHORTCUTS = [
-    { name: "Google",    url: "https://www.google.com",               bg: "#4285f4", glyph: "G" },
-    { name: "Wikipedia", url: "https://es.wikipedia.org",             bg: "#4a5568", glyph: "W" },
-    { name: "YouTube",   url: "https://www.youtube.com",              bg: "#ff0033", glyph: "▶" },
-    { name: "METAR LEBL", url: "https://aviationweather.gov/api/data/metar?ids=LEBL&format=raw&hours=3", bg: "#f9a825", glyph: "✈" },
-    { name: "Mapa",      url: "https://www.openstreetmap.org/#map=11/41.39/2.17", bg: "#58a55c", glyph: "⌖" },
-    { name: "HN",        url: "https://news.ycombinator.com",         bg: "#ff6600", glyph: "Y" }
+    { name: "Google",     url: "https://www.google.com",   bg: "#4285f4" },
+    { name: "Wikipedia",  url: "https://es.wikipedia.org", bg: "#4a5568" },
+    { name: "YouTube",    url: "https://www.youtube.com",  bg: "#ff0033" },
+    { name: "METAR LEBL", url: "https://aviationweather.gov/api/data/metar?ids=LEBL&format=raw&hours=3", bg: "#f9a825" },
+    { name: "Mapa",       url: "https://www.openstreetmap.org/#map=11/41.39/2.17", bg: "#58a55c" },
+    { name: "Hacker News", url: "https://news.ycombinator.com", bg: "#ff6600" }
   ];
 
   /* ---------- storage seguro (Safari privado lanza excepciones) ---------- */
@@ -198,28 +215,36 @@
   /* ================================================================
      APP
      ================================================================ */
-  Apps.browser = function (startUrl) {
+  Apps.browser = function (startUrl, opts = {}) {
+    if (typeof startUrl !== "string") startUrl = undefined;
     if (openWindows.browser) {
       focusWindow("browser");
-      if (typeof startUrl === "string" && openWindows.browser._nebula) openWindows.browser._nebula.newTab(startUrl);
+      if ((startUrl || opts.private) && openWindows.browser._nebula) openWindows.browser._nebula.newTab(startUrl, { private: !!opts.private });
       return;
     }
 
     const body = document.createElement("div");
     body.className = "browser";
     body.innerHTML = `
-      <div class="b-tabs"><div class="b-tablist"></div><button class="b-newtab" title="Nueva pestaña">+</button></div>
+      <div class="b-tabs">
+        <div class="b-tablist"></div>
+        <button class="b-newtab" title="Nueva pestaña">+</button>
+        <button class="b-newprivate" title="Nueva pestaña de incógnito">${ICON("incognito")}</button>
+      </div>
       <div class="b-chrome">
         <button class="b-btn" data-act="back" title="Atrás">‹</button>
         <button class="b-btn" data-act="fwd" title="Adelante">›</button>
         <button class="b-btn" data-act="reload" title="Recargar">↻</button>
         <button class="b-btn" data-act="home" title="Inicio">⌂</button>
         <form class="b-urlwrap">
+          <span class="b-private-tag" title="Pestaña de incógnito">${ICON("incognito")}</span>
           <span class="b-mode" title="Modo de carga"></span>
           <input class="b-url" spellcheck="false" autocomplete="off" placeholder="Busca o escribe una dirección">
+          <datalist></datalist>
         </form>
         <button class="b-btn" data-act="mode" title="Cambiar modo: directo / proxy">⇄</button>
         <button class="b-btn" data-act="star" title="Añadir a favoritos">☆</button>
+        <button class="b-btn b-btn-svg" data-act="history" title="Historial">${ICON("history")}</button>
         <button class="b-btn" data-act="external" title="Abrir en el navegador real">↗</button>
       </div>
       <div class="b-progress"><span></span></div>
@@ -231,20 +256,53 @@
     const modeTag = body.querySelector(".b-mode");
     const progress = body.querySelector(".b-progress");
     const starBtn = body.querySelector('[data-act="star"]');
+    const datalist = body.querySelector("datalist");
+    datalist.id = "nebula-suggest-" + Date.now();
+    urlInput.setAttribute("list", datalist.id);
 
     const tabs = [];
     let active = null;
     let seq = 0;
 
     function bookmarks() { return load(STORE_BOOKMARKS, []); }
+    function visits() { return load(STORE_HISTORY, []); }
+
+    function remember(tab, entry) {
+      if (tab.private || entry.url.startsWith("claude://")) return;
+      const list = visits().filter(v => v.url !== entry.url);
+      list.unshift({ url: entry.url, title: tab.title, t: Date.now() });
+      save(STORE_HISTORY, list.slice(0, HISTORY_MAX));
+    }
+
+    function refreshSuggestions() {
+      const seen = new Set();
+      const urls = bookmarks().map(b => b.url).concat(visits().map(v => v.url))
+        .filter(u => !seen.has(u) && seen.add(u)).slice(0, 40);
+      datalist.innerHTML = urls.map(u => `<option value="${esc(u)}">`).join("");
+    }
+
+    /* icono de pestaña: favicon real, logo Nebula o antifaz de incógnito */
+    function tabIcon(tab, url) {
+      const box = tab.el.querySelector(".b-tab-icon");
+      if (tab.private && (!url || url.startsWith("claude://"))) { box.innerHTML = ICON("incognito"); return; }
+      if (!url || url.startsWith("claude://")) { box.innerHTML = ICON("nebula"); return; }
+      if (tab.private) { box.innerHTML = ICON("globe"); return; }
+      const img = new Image();
+      img.alt = "";
+      img.referrerPolicy = "no-referrer";
+      img.onerror = () => { box.innerHTML = ICON("globe"); };
+      img.src = faviconUrl(url);
+      box.innerHTML = "";
+      box.appendChild(img);
+    }
 
     /* ---------- pestañas ---------- */
-    function newTab(url = "claude://start") {
-      const tab = { id: ++seq, title: "Nueva pestaña", history: [], idx: -1, view: document.createElement("div"), frame: null, loadId: 0 };
-      tab.view.className = "b-view";
+    function newTab(url = "claude://start", opts = {}) {
+      const tab = { id: ++seq, title: "Nueva pestaña", history: [], idx: -1, view: document.createElement("div"), frame: null, loadId: 0, private: !!opts.private, blobs: [] };
+      tab.view.className = "b-view" + (tab.private ? " private" : "");
       tab.el = document.createElement("div");
-      tab.el.className = "b-tab";
-      tab.el.innerHTML = `<span class="b-tab-title"></span><button class="b-tab-x" title="Cerrar pestaña">✕</button>`;
+      tab.el.className = "b-tab" + (tab.private ? " private" : "");
+      tab.el.innerHTML = `<span class="b-tab-icon"></span><span class="b-tab-title"></span><button class="b-tab-x" title="Cerrar pestaña">✕</button>`;
       tab.el.addEventListener("click", (e) => {
         if (e.target.classList.contains("b-tab-x")) { closeTab(tab); return; }
         selectTab(tab);
@@ -261,7 +319,11 @@
     function closeTab(tab) {
       const i = tabs.indexOf(tab);
       tabs.splice(i, 1);
+      tab.loadId++;
       tab.el.remove(); tab.view.remove();
+      // en incógnito no queda nada: soltamos imágenes en memoria e iframes
+      tab.blobs.forEach(u => URL.revokeObjectURL(u));
+      tab.history = [];
       if (!tabs.length) { closeWindow("browser"); return; }
       if (active === tab) selectTab(tabs[Math.min(i, tabs.length - 1)]);
     }
@@ -272,6 +334,7 @@
         t.el.classList.toggle("active", t === tab);
         t.view.hidden = t !== tab;
       });
+      body.classList.toggle("is-private", !!tab.private);
       refreshChrome();
     }
 
@@ -291,6 +354,9 @@
       modeTag.textContent = entry.mode === "direct" ? "directo" : entry.mode === "proxy" ? "proxy" : "";
       modeTag.className = "b-mode " + (entry.mode || "");
       starBtn.textContent = bookmarks().some(b => b.url === entry.url) ? "★" : "☆";
+      body.classList.toggle("is-private", !!tab.private);
+      urlInput.placeholder = tab.private ? "Buscar en incógnito" : "Busca o escribe una dirección";
+      refreshSuggestions();
       if (win) win.querySelector(".win-title").textContent = (tab.title || "Nebula") + " — Nebula";
     }
 
@@ -324,7 +390,9 @@
       tab.view.innerHTML = "";
       tab.frame = null;
       if (tab === active) refreshChrome();
+      tabIcon(tab, entry.url);
 
+      if (entry.url === "claude://historial") { renderHistory(tab); return; }
       if (entry.url.startsWith("claude://")) {
         renderStart(tab);
         return;
@@ -339,6 +407,7 @@
         let host = "";
         try { host = new URL(entry.url).hostname; } catch {}
         setTitle(tab, host || entry.url);
+        remember(tab, entry);
         const f = makeFrame(tab, false);
         f.src = target;
         if (tab === active) setLoading(true);
@@ -357,6 +426,7 @@
           const img = document.createElement("img");
           img.className = "b-image";
           img.src = URL.createObjectURL(res.blob);
+          tab.blobs.push(img.src);
           tab.view.appendChild(img);
           setTitle(tab, entry.url.split("/").pop() || "Imagen");
         } else {
@@ -366,6 +436,8 @@
           let host = ""; try { host = new URL(entry.url).hostname; } catch {}
           setTitle(tab, (m && decodeEntities(m[1]).trim()) || host);
         }
+        tabIcon(tab, entry.url);
+        remember(tab, entry);
       } catch (err) {
         if (tab.loadId !== loadId) return;
         renderError(tab, entry, err);
@@ -387,36 +459,64 @@
       if (proxied) {
         // sin allow-same-origin: los scripts de la web no pueden tocar Claude OS
         f.setAttribute("sandbox", "allow-scripts allow-forms allow-popups allow-modals allow-downloads");
+      } else if (tab.private && !("credentialless" in HTMLIFrameElement.prototype)) {
+        // navegador sin iframes "credentialless": aislamos del todo (sin cookies ni almacenamiento)
+        f.setAttribute("sandbox", "allow-scripts allow-forms allow-popups allow-modals allow-presentation");
       } else {
         f.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads");
       }
+      // incógnito: la web carga sin tus cookies y con un almacenamiento que se borra al cerrar
+      if (tab.private) { f.setAttribute("credentialless", ""); f.credentialless = true; }
       tab.view.appendChild(f);
       tab.frame = f;
       return f;
     }
 
     /* ---------- páginas internas ---------- */
-    function renderStart(tab) {
-      setTitle(tab, "Nueva pestaña");
-      const marks = bookmarks();
-      const items = DEFAULT_SHORTCUTS.concat(marks.map(b => ({ name: b.title, url: b.url, bg: "#8e6bff", glyph: (b.title || "?").trim().charAt(0).toUpperCase(), mark: true })));
-      const div = document.createElement("div");
-      div.className = "b-start";
-      div.innerHTML = `
-        <h2>Nebula</h2>
-        <form class="b-searchform"><input class="b-search" placeholder="Buscar en Google o escribir una dirección" spellcheck="false"></form>
-        <div class="b-shortcuts">
-          ${items.map((s, i) => `
-            <div class="b-shortcut" data-i="${i}" title="${esc(s.url)}">
-              <div class="b-shortcut-icon" style="background:${esc(s.bg)}">${esc(s.glyph)}</div>
-              <span>${esc(s.name)}</span>
-              ${s.mark ? `<button class="b-unmark" data-url="${esc(s.url)}" title="Quitar de favoritos">✕</button>` : ""}
-            </div>`).join("")}
+    function shortcutTile(s, i, isPrivate) {
+      const letter = esc((s.name || "?").trim().charAt(0).toUpperCase());
+      const fav = isPrivate ? "" : faviconUrl(s.url);
+      return `
+        <div class="b-shortcut" data-i="${i}" title="${esc(s.url)}">
+          <div class="b-shortcut-icon" style="--fallback:${esc(s.bg || "#8e6bff")}">
+            ${fav ? `<img src="${esc(fav)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+            <b>${letter}</b>
+          </div>
+          <span>${esc(s.name)}</span>
+          ${s.mark ? `<button class="b-unmark" data-url="${esc(s.url)}" title="Quitar de favoritos">✕</button>` : ""}
         </div>`;
+    }
+
+    function renderStart(tab) {
+      setTitle(tab, tab.private ? "Incógnito" : "Nueva pestaña");
+      const marks = bookmarks();
+      const items = DEFAULT_SHORTCUTS.concat(marks.map(b => ({ name: b.title || b.url, url: b.url, bg: "#8e6bff", mark: true })));
+      const div = document.createElement("div");
+      div.className = "b-start" + (tab.private ? " private" : "");
+      div.innerHTML = tab.private ? `
+        <div class="b-incog-mark">${ICON("incognito")}</div>
+        <h2>Incógnito</h2>
+        <form class="b-searchform"><input class="b-search" placeholder="Buscar en Google o escribir una dirección" spellcheck="false"></form>
+        <div class="b-incog-info">
+          <p>Nebula no guardará lo que visites en esta pestaña: ni historial, ni sugerencias, ni iconos de las webs.</p>
+          <div class="b-incog-cols">
+            <div><strong>Se protege</strong><span>Tu historial en Claude OS</span><span>Cookies y datos de las webs (se borran al cerrar)</span></div>
+            <div><strong>Sigue viendo lo que haces</strong><span>Las webs que visitas</span><span>Tu red, centro o proveedor de internet</span></div>
+          </div>
+        </div>` : `
+        <div class="b-brand">
+          <span class="b-brand-mark">${ICON("nebula")}</span>
+          <h2>Nebula</h2>
+        </div>
+        <form class="b-searchform"><input class="b-search" placeholder="Buscar en Google o escribir una dirección" spellcheck="false"></form>
+        <div class="b-shortcuts">${items.map((s, i) => shortcutTile(s, i, false)).join("")}</div>
+        <button class="b-incog-cta">${ICON("incognito")}<span>Nueva pestaña de incógnito</span></button>`;
       div.querySelector(".b-searchform").addEventListener("submit", (e) => {
         e.preventDefault();
         navigate(tab, div.querySelector(".b-search").value);
       });
+      const cta = div.querySelector(".b-incog-cta");
+      if (cta) cta.onclick = () => newTab(undefined, { private: true });
       div.querySelectorAll(".b-shortcut").forEach(s => s.addEventListener("click", (e) => {
         const un = e.target.closest(".b-unmark");
         if (un) {
@@ -432,6 +532,31 @@
       setLoading(false);
       refreshChrome();
       if (tab === active) setTimeout(() => div.querySelector(".b-search").focus(), 0);
+    }
+
+    function renderHistory(tab) {
+      setTitle(tab, "Historial");
+      const list = visits();
+      const fmt = new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      const div = document.createElement("div");
+      div.className = "b-history";
+      div.innerHTML = `
+        <header><h2>Historial</h2>${list.length ? `<button class="b-hist-clear">Borrar historial</button>` : ""}</header>
+        ${tab.private ? `<p class="b-hist-empty">Las pestañas de incógnito no se guardan aquí.</p>` : ""}
+        ${list.length ? `<ul>${list.map((v, i) => `
+          <li data-i="${i}">
+            <img src="${esc(faviconUrl(v.url))}" alt="" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">
+            <span class="t">${esc(v.title || v.url)}</span>
+            <span class="u">${esc(v.url)}</span>
+            <time>${fmt.format(v.t)}</time>
+          </li>`).join("")}</ul>` : `<p class="b-hist-empty">Todavía no has visitado ninguna web.</p>`}`;
+      div.querySelectorAll("li").forEach(li => li.onclick = () => navigate(tab, list[+li.dataset.i].url));
+      const clr = div.querySelector(".b-hist-clear");
+      if (clr) clr.onclick = () => { save(STORE_HISTORY, []); renderHistory(tab); refreshSuggestions(); };
+      tab.view.innerHTML = "";
+      tab.view.appendChild(div);
+      setLoading(false);
+      refreshChrome();
     }
 
     function renderError(tab, entry, err) {
@@ -493,6 +618,15 @@
     urlInput.addEventListener("keydown", (e) => { if (e.key === "Escape") { urlInput.blur(); refreshChrome(); } });
 
     body.querySelector(".b-newtab").onclick = () => newTab();
+    body.querySelector(".b-newprivate").onclick = () => newTab(undefined, { private: true });
+    // Atajos: Alt+T nueva pestaña, Alt+Shift+N incógnito, Alt+W cerrar
+    body.addEventListener("keydown", (e) => {
+      if (!e.altKey) return;
+      const k = e.key.toLowerCase();
+      if (k === "t" && !e.shiftKey) { e.preventDefault(); newTab(); }
+      else if (k === "n" && e.shiftKey) { e.preventDefault(); newTab(undefined, { private: true }); }
+      else if (k === "w") { e.preventDefault(); closeTab(active); }
+    });
     body.querySelector(".b-chrome").addEventListener("click", (e) => {
       const b = e.target.closest("[data-act]"); if (!b) return;
       const tab = active, entry = tab.history[tab.idx];
@@ -501,6 +635,7 @@
         case "fwd": go(tab, 1); break;
         case "reload": render(tab); break;
         case "home": navigate(tab, "claude://start"); break;
+        case "history": navigate(tab, "claude://historial"); break;
         case "mode":
           if (!entry || entry.url.startsWith("claude://")) return;
           entry.mode = entry.mode === "direct" ? "proxy" : "direct";
@@ -534,6 +669,6 @@
     });
     obs.observe(WindowsLayer, { childList: true });
 
-    newTab(typeof startUrl === "string" ? startUrl : "claude://start");
+    newTab(startUrl || "claude://start", { private: !!opts.private });
   };
 })();
