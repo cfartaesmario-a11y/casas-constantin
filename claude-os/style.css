@@ -1041,6 +1041,12 @@ body.has-max #dock:hover { transform: translate(-50%, 0); opacity: 1; }
   border: 2px solid transparent;
 }
 .swatch.sel { border-color: #fff; }
+.ver-box { display: flex; align-items: center; gap: 10px; }
+.ver-badge { font-family: var(--f-mono); font-size: 13px; padding: 4px 10px; border-radius: 8px; color: var(--accent); background: rgba(255,159,28,0.12); box-shadow: inset 0 0 0 1px rgba(255,159,28,0.3); }
+.ver-btn { padding: 6px 12px; border-radius: 8px; font-size: 12px; background: rgba(255,255,255,0.08); }
+.ver-btn:hover { background: rgba(255,255,255,0.15); }
+#ver-status.ver-ok { color: var(--nav-green); }
+#ver-status.ver-new { color: var(--warn); }
 .set-row.set-col { flex-direction: column; align-items: stretch; gap: 10px; }
 .set-input {
   width: 100%;

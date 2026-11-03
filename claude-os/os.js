@@ -393,6 +393,17 @@ const Apps = {
 
       <div class="set-row">
         <div>
+          <label>Versión</label>
+          <small id="ver-status">Comprobando si hay actualizaciones…</small>
+        </div>
+        <div class="ver-box">
+          <span class="ver-badge">v${window.MCF_VERSION || "?"}</span>
+          <button class="ver-btn" id="ver-check">Comprobar</button>
+        </div>
+      </div>
+
+      <div class="set-row">
+        <div>
           <label>Color de acento</label>
           <small>Cambia el color principal del sistema.</small>
         </div>
@@ -457,6 +468,31 @@ const Apps = {
       });
     };
 
+    /* Versión instalada frente a la publicada */
+    const verStatus = body.querySelector("#ver-status");
+    const verBtn = body.querySelector("#ver-check");
+    function checkVersion() {
+      verStatus.textContent = "Comprobando si hay actualizaciones…";
+      verStatus.className = "";
+      verBtn.textContent = "Comprobar";
+      verBtn.onclick = checkVersion;
+      fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+        .then(r => r.json())
+        .then(v => {
+          if (v.v === window.MCF_VERSION) {
+            verStatus.textContent = "Actualizado: tienes la última versión (v" + v.v + ").";
+            verStatus.className = "ver-ok";
+          } else {
+            verStatus.textContent = "Hay una versión nueva: v" + v.v + ". Pulsa Actualizar.";
+            verStatus.className = "ver-new";
+            verBtn.textContent = "Actualizar";
+            verBtn.onclick = () => location.replace(location.pathname + "?v=" + encodeURIComponent(v.v));
+          }
+        })
+        .catch(() => { verStatus.textContent = "No se pudo comprobar (¿sin conexión?)."; });
+    }
+    checkVersion();
+
     const curAccent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim().toLowerCase();
     body.querySelectorAll(".swatch").forEach(s => s.classList.toggle("sel", s.dataset.c === curAccent));
     const pilot = body.querySelector("#ck-pilot");
@@ -479,7 +515,7 @@ const Apps = {
     body.innerHTML = `
       <div class="about-logo">${document.querySelector(".logo-mcf").innerHTML.replace(/mcfg-tb/g, "mcfg-about")}</div>
       <h2>MCF<span>OS</span></h2>
-      <p>Versión 2.0 · Night Cockpit</p>
+      <p>Versión ${window.MCF_VERSION || "?"} · Night Cockpit</p>
       <p style="max-width:360px;margin:16px auto;line-height:1.6">
         Mi escritorio en la web: ventanas, navegador Nebula con incógnito
         y vídeos, terminal, notas y hora Zulu para cuando vuele.
