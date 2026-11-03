@@ -877,6 +877,13 @@ body.has-max #dock:hover { transform: translate(-50%, 0); opacity: 1; }
 .b-watch-actions button:hover { background: rgba(255,255,255,0.18); }
 .b-watch .b-watch-more { color: #ddd; }
 
+.b-diag li { cursor: default; grid-template-columns: 12px minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.2fr); }
+.b-diag-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
+.b-diag li.ok .b-diag-dot { background: #2fbf71; }
+.b-diag li.bad .b-diag-dot { background: #e5484d; }
+.b-diag li.bad time { color: #c43c40; }
+.b-diag time { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* ---- Terminal ---- */
 .terminal {
   font-family: var(--f-mono);

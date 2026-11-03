@@ -120,7 +120,7 @@
       return q ? "mcf://buscar?q=" + encodeURIComponent(q) : HOME;
     }
     if (h === "bing.com" && u.pathname === "/search" && u.searchParams.get("q")) return "mcf://buscar?q=" + encodeURIComponent(u.searchParams.get("q"));
-    if (/duckduckgo\.com$/.test(h)) return u.searchParams.get("q") ? "mcf://buscar?q=" + encodeURIComponent(u.searchParams.get("q")) : HOME;
+    if (/duckduckgo\.com$/.test(h) && h !== "html.duckduckgo.com") return u.searchParams.get("q") ? "mcf://buscar?q=" + encodeURIComponent(u.searchParams.get("q")) : HOME;
     return url;
   }
 
@@ -225,7 +225,7 @@
   }
 
   async function searchDuck(q) {
-    const res = await fetchPage("https://html.duckduckgo.com/html/?kl=es-es&q=" + encodeURIComponent(q));
+    const res = await fetchPage("https://html.duckduckgo.com/html/?kl=es-es&kp=1&q=" + encodeURIComponent(q));
     const doc = new DOMParser().parseFromString(res.text, "text/html");
     const out = [];
     doc.querySelectorAll(".result").forEach(r => {
@@ -244,7 +244,7 @@
   }
 
   async function searchBing(q, page) {
-    const url = "https://www.bing.com/search?q=" + encodeURIComponent(q) + "&setlang=es" + (page ? "&first=" + (page * 10 + 1) : "");
+    const url = "https://www.bing.com/search?q=" + encodeURIComponent(q) + "&setlang=es&adlt=strict" + (page ? "&first=" + (page * 10 + 1) : "");
     const res = await fetchPage(url);
     const doc = new DOMParser().parseFromString(res.text, "text/html");
     const out = [];
@@ -563,6 +563,7 @@
         if (page === "/videos") return renderVideos(tab, u.searchParams.get("q") || "", loadId);
         if (page === "/videos/ver") return renderWatch(tab, u.searchParams.get("v"), loadId);
         if (page === "/historial") return renderHistory(tab);
+        if (page === "/diagnostico") return renderDiag(tab, loadId);
         return renderStart(tab);
       }
 
@@ -783,7 +784,7 @@
         <nav class="b-serp-tabs">
           <button class="on">Todo</button>
           <button data-go="videos">Vídeos</button>
-          <button data-go="ddg">Abrir en DuckDuckGo ↗</button>
+          <button data-go="ddg">DuckDuckGo</button>
         </nav>
         <div class="b-serp-body">
           <main class="b-serp-main">
@@ -795,7 +796,8 @@
         </div>`);
       div.querySelector(".b-sbox-slot").replaceWith(searchBox(tab, q, "Buscar", (v) => navigate(tab, v)));
       div.querySelector('[data-go="videos"]').onclick = () => navigate(tab, "mcf://videos?q=" + encodeURIComponent(q));
-      div.querySelector('[data-go="ddg"]').onclick = () => window.open("https://duckduckgo.com/?q=" + encodeURIComponent(q), "_blank", "noopener");
+      // versión ligera de DuckDuckGo, abierta dentro de Nebula (la normal no se deja incrustar)
+      div.querySelector('[data-go="ddg"]').onclick = () => navigate(tab, "https://html.duckduckgo.com/html/?kl=es-es&kp=1&q=" + encodeURIComponent(q));
       const list = div.querySelector(".b-results");
       tabLoading(tab, true);
 
@@ -853,7 +855,7 @@
               <div class="b-serp-gframe"></div>
             </div>`);
           const f = makeFrame(tab, false, main.querySelector(".b-serp-gframe"));
-          f.src = "https://www.bing.com/search?setlang=es&q=" + encodeURIComponent(q);
+          f.src = "https://www.bing.com/search?setlang=es&adlt=strict&q=" + encodeURIComponent(q);
         } finally {
           if (tab.loadId === loadId) tabLoading(tab, false);
         }
@@ -997,6 +999,56 @@
       refreshChrome();
     }
 
+    /* ---------- diagnóstico: qué servicios responden desde esta conexión ---------- */
+    async function renderDiag(tab, loadId) {
+      setTitle(tab, "Diagnóstico");
+      const checks = [
+        { name: "Cargador de webs (r.jina.ai)", why: "Abre las webs que no se dejan incrustar", run: () => fetchProbe("https://r.jina.ai/https://example.com", { "X-Return-Format": "html" }) },
+        { name: "Buscador (DuckDuckGo)", why: "Resultados de búsqueda", run: () => searchDuck("airbus").then(r => r.length + " resultados") },
+        { name: "Vídeos (YouTube)", why: "Lista de vídeos", run: () => searchVideos("aviacion").then(r => r.length + " vídeos") },
+        { name: "Miniaturas (i.ytimg.com)", why: "Imágenes de los vídeos", run: () => imgProbe("https://i.ytimg.com/vi/dQw4w9WgXcQ/default.jpg") },
+        { name: "Reproductor (youtube.com)", why: "Ver los vídeos", run: () => imgProbe("https://www.youtube.com/favicon.ico") },
+        { name: "Wikipedia", why: "Fichas y sugerencias", run: () => fetchProbe("https://es.wikipedia.org/w/api.php?action=opensearch&search=a&format=json&origin=*") },
+        { name: "Tu proxy (Ajustes)", why: "Opcional", run: () => NebulaConfig.getProxy() ? fetchProbe(NebulaConfig.getProxy() + (NebulaConfig.getProxy().includes("?") ? "&" : "?") + "url=https://example.com") : Promise.resolve("no configurado") }
+      ];
+      const div = page(tab, "b-history b-diag", `
+        <header><h2>Diagnóstico</h2><button class="b-hist-clear" data-a="again">Repetir</button></header>
+        <p class="b-hist-empty">Comprueba qué servicios de Nebula responden desde tu conexión. Si uno sale "bloqueado", es tu red o tu dispositivo quien lo impide.</p>
+        <ul>${checks.map((c, i) => `<li data-i="${i}"><span class="b-diag-dot"></span><span class="t">${esc(c.name)}</span><span class="u">${esc(c.why)}</span><time>comprobando…</time></li>`).join("")}</ul>`);
+      div.querySelector('[data-a="again"]').onclick = () => { cache.clear(); render(tab); };
+      await Promise.all(checks.map(async (c, i) => {
+        const li = div.querySelector(`li[data-i="${i}"]`);
+        try {
+          const r = await c.run();
+          if (tab.loadId !== loadId) return;
+          li.classList.add(r === "no configurado" ? "na" : "ok");
+          li.querySelector("time").textContent = typeof r === "string" ? r : "funciona";
+        } catch (e) {
+          if (tab.loadId !== loadId) return;
+          li.classList.add("bad");
+          li.querySelector("time").textContent = "bloqueado o caído (" + (e.name === "AbortError" ? "tiempo agotado" : e.message) + ")";
+        }
+      }));
+    }
+    async function fetchProbe(url, headers) {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 15000);
+      try {
+        const r = await fetch(url, { signal: ctrl.signal, headers: headers || {}, credentials: "omit", cache: "no-store" });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return "funciona";
+      } finally { clearTimeout(t); }
+    }
+    function imgProbe(url) {
+      return new Promise((ok, ko) => {
+        const i = new Image();
+        const t = setTimeout(() => ko(new Error("tiempo agotado")), 10000);
+        i.onload = () => { clearTimeout(t); ok("funciona"); };
+        i.onerror = () => { clearTimeout(t); ko(new Error("no carga")); };
+        i.src = url + "?t=" + Date.now();
+      });
+    }
+
     function renderError(tab, entry, err) {
       const host = hostOf(entry.url) || entry.url;
       setTitle(tab, "No se pudo cargar");
@@ -1007,11 +1059,13 @@
           <button data-a="retry">Reintentar</button>
           <button data-a="direct">Probar incrustada directa</button>
           <button data-a="search">Buscar "${esc(host)}"</button>
+          <button data-a="diag">Diagnóstico</button>
           <button data-a="ext" class="primary">Abrir en el navegador real ↗</button>
         </div>
         <p class="b-hint">Para que casi todo cargue siempre, despliega tu propio proxy gratis (archivo <code>proxy-worker.js</code>) y pon su URL en Ajustes → Proxy del navegador.</p>`);
       div.querySelector('[data-a="retry"]').onclick = () => render(tab, { fresh: true });
       div.querySelector('[data-a="direct"]').onclick = () => { entry.mode = "direct"; render(tab); };
+      div.querySelector('[data-a="diag"]').onclick = () => navigate(tab, "mcf://diagnostico");
       div.querySelector('[data-a="search"]').onclick = () => navigate(tab, "mcf://buscar?q=" + encodeURIComponent(host));
       div.querySelector('[data-a="ext"]').onclick = () => window.open(entry.url, "_blank", "noopener");
     }

@@ -264,6 +264,7 @@ const Apps = {
   whoami      usuario
   neofetch    info del sistema
   open <url>  abrir web en Nebula (-i incógnito)
+  diag        comprobar qué servicios funcionan
   claude <q>  preguntar a Claude
   clear       limpiar pantalla
   exit        cerrar terminal`,
@@ -281,6 +282,7 @@ const Apps = {
       whoami: () => "mario",
       clear: () => { out.innerHTML = ""; return null; },
       exit: () => { closeWindow("terminal"); return null; },
+      diag: () => { Apps.browser("mcf://diagnostico"); return "Abriendo diagnóstico en Nebula..."; },
       open: (a) => {
         if (!a) return "uso: open [-i] <url o búsqueda>   (-i = incógnito)";
         const priv = /^-i(\s|$)/.test(a);
