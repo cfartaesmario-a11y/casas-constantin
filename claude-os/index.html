@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MCF OS</title>
 <meta name="theme-color" content="#0a0d14">
-<link rel="stylesheet" href="style.css">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" href="style.css?v=4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap">
@@ -112,8 +113,21 @@
     <div class="boot-bar"><span></span></div>
   </div>
 
-  <script src="os.js"></script>
-  <script src="apps/icons.js"></script>
-  <script src="apps/browser.js"></script>
+  <script>
+    /* Si hay una versión nueva publicada, recarga sola saltándose la caché */
+    window.MCF_VERSION = "4";
+    fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+      .then(r => r.json())
+      .then(v => {
+        if (!v || v.v === window.MCF_VERSION) return;
+        let tried = null;
+        try { tried = sessionStorage.getItem("mcf-upd"); sessionStorage.setItem("mcf-upd", v.v); } catch {}
+        if (tried !== v.v) location.replace(location.pathname + "?v=" + encodeURIComponent(v.v));
+      })
+      .catch(() => {});
+  </script>
+  <script src="os.js?v=4"></script>
+  <script src="apps/icons.js?v=4"></script>
+  <script src="apps/browser.js?v=4"></script>
 </body>
 </html>
